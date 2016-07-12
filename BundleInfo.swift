@@ -2,7 +2,7 @@
 //  AppInfo.swift
 //  store_killer_ios
 //
-//  Created by ea on 16/7/12.
+//  Created by 樊半缠 on 16/7/12.
 //  Copyright © 2016年 樊半缠. All rights reserved.
 //
 

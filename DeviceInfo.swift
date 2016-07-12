@@ -3,7 +3,7 @@
 //  store_killer_ios
 //
 //  Created by 樊半缠 on 16/6/30.
-//  Copyright © 2016年 ea. All rights reserved.
+//  Copyright © 2016年 樊半缠. All rights reserved.
 //
 import UIKit
 import SystemConfiguration

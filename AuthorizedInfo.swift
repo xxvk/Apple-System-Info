@@ -2,7 +2,7 @@
 //  AuthorizedInfo.swift
 //  store_killer_ios
 //
-//  Created by ea on 16/7/12.
+//  Created by ea 樊半缠 16/7/12.
 //  Copyright © 2016年 樊半缠. All rights reserved.
 //
 
