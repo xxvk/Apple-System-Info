@@ -32,7 +32,7 @@ public class DeviceInfo {
         return UIDevice.currentDevice().systemVersion
     }
     //  MARK: deviceName:设备名称
-    //(e.g "my iPhone")
+    //(e.g "樊半缠's iPhone")
     class var deviceName: String {
         get{
             return UIDevice.currentDevice().name
@@ -217,7 +217,7 @@ public class DeviceInfo {
     class func cpuUsage_Description() -> String {
         return "\(self.cpuUsage)%"
     }
-    //MARK: cpuUsage raw value
+    //MARK: cpuUsage percent value (max is 1.0 ,min is 0.0)
     class var cpuUsage:Double{
         get{
             var kr = kern_return_t()
