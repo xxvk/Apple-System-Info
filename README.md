@@ -39,7 +39,7 @@ CPU:中央处理器
 
 #### NetworkInfo.swift
 
-networkType:网络连接状态(NotReachable/EthernetOrWiFi/WWAN)
+networkStatus:网络连接状态(NotReachable/ReachableViaWiFi/ReachableViaWWAN)
 
 carrierType:运营商(e.g T-Mobile/中国联通)
 
