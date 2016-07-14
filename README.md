@@ -57,8 +57,11 @@ isLocationAuthorized:地理位置是否可用
 
 
 ## Install
+you need added 'SwiftyJSON' if you not add.
 
 Drag files to your project with properly address
+
+确定存在依赖 'SwiftyJSON'然后
 
 把文件拖进去就行了
 
