@@ -8,54 +8,57 @@
 
 import Foundation
 import CFNetwork
-import Alamofire
+import CoreTelephony
+import SwiftyJSON
 //  MARK: - Network:网络
 public class NetworkInfo{
     //  MARK:  networkType:网络连接状态(NotReachable/EthernetOrWiFi/WWAN)
     // TODO:
-    public class func networkType() -> String {
-        let networkReachabilityManager : NetworkReachabilityManager = NetworkReachabilityManager.init()!
-        var foo = ""
-        switch networkReachabilityManager.networkReachabilityStatus {
-        case .Unknown : foo = "Unknown"; break
-        case .NotReachable : foo = "NotReachable";break
-        case .Reachable(.EthernetOrWiFi):foo = "EthernetOrWiFi";break
-        case .Reachable(.WWAN):foo = "WWAN";break
+    public class func networkStatus() -> Reachability.NetworkStatus {
+        do{
+            let  networktype = try Reachability.reachabilityForInternetConnection().currentReachabilityStatus;
+            return networktype
+        }catch{
+            print(error)
+            return .NotReachable
         }
-        return foo
-        //        do{
-        //            let  networktype = try Reachability.reachabilityForInternetConnection().currentReachabilityStatus;
-        //            return networktype.description
-        //        }catch{
-        //            return "No Connection"
-        //            print(error)
-        //        }
     }
+    
     //  MARK: carrierType:运营商(e.g 中国联通)
-    // TODO:
     public class func carrierType() -> String {
-        return "中国联通"
+        let tNetwork = CTTelephonyNetworkInfo()
+        let carrier  = tNetwork.subscriberCellularProvider
+        var carrier_name : String?
+        var carrier_code : String?
+        
+        carrier_name = carrier!.carrierName ?? ""
+        carrier_code = carrier!.mobileNetworkCode ?? ""
+        
+        return carrier_name!
     }
+    
     // MARK:  IP Address
-    // TODO:
-    class func IPAddress()-> String {
-        // Get the current IP Address
-        let networkReachabilityManager : NetworkReachabilityManager = NetworkReachabilityManager.init()!
-        var currentIPAddress = ""
+    class func IPAddress(completionHandler: (String?) -> Void)-> Void {
+        // Get the current IP Address\
+        let SERVICE_BASE_URL = "https://freegeoip.net/json/"
+        let session = NSURLSession.sharedSession()
+        var currentIPAddress = "0.0.0.0"
         
-        //        Reachability.reachabilityForInternetConnection()
-        
-        switch networkReachabilityManager.networkReachabilityStatus {
-        case .Unknown : currentIPAddress = "0.0.0.0"; break
-        case .NotReachable : currentIPAddress = "0.0.0.0";break
-        // WiFi is in use
-        case .Reachable(.EthernetOrWiFi):
-            //            currentIPAddress = [self wiFiIPAddress];
+        switch self.networkStatus() {
+        case .NotReachable :
+            currentIPAddress = "0.0.0.0"
+            completionHandler(currentIPAddress)
             break
-        case .Reachable(.WWAN):
-            //            currentIPAddress = [self cellIPAddress];
+        // WiFi is in use
+        case .ReachableViaWiFi,.ReachableViaWWAN:
+            session.dataTaskWithURL(NSURL(string: SERVICE_BASE_URL)!, completionHandler: { (data, response, error) -> Void in
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let json = JSON(data: data!)
+                    currentIPAddress = json["ip"].string!
+                    completionHandler(currentIPAddress)
+                })
+            }).resume()
             break
         }
-        return currentIPAddress
     }
 }
