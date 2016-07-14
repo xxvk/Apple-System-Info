@@ -1,7 +1,7 @@
 # iOS-System-Info(Swift)
 
-[![Swift](https://img.shields.io/badge/swift-3.0-orange.svg?style=flat)](https://developer.apple.com/swift/)
-[![Platforms](https://img.shields.io/badge/platform-osx%20%7C%20ios%20%7C%20watchos%20%7C%20tvos%20%7C%20linux-lightgrey.svg)](https://developer.apple.com/swift/)
+[![Swift](https://img.shields.io/badge/swift-2.3-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Platforms](https://img.shields.io/badge/platform-osx%20%7C%20ios%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)](https://developer.apple.com/swift/)
 [![License](https://img.shields.io/badge/license-MIT-71787A.svg)](https://tldrlegal.com/license/mit-license)
 [![Build Status](https://travis-ci.org/xxvk/iOS-System-Info.svg?branch=develop)]
 [![Join the chat at https://gitter.im/xxvk/iOS-System-Info](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/xxvk/iOS-System-Info?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
