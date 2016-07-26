@@ -3,18 +3,19 @@
 //  store_killer_ios
 //
 //  Created by 樊半缠 on 16/7/12.
-//  Copyright © 2016年 樊半缠. All rights reserved.
+//  Copyright © 2016年 reformation.tech All rights reserved.
 //
 
 import Foundation
 import CFNetwork
 import CoreTelephony
 import SwiftyJSON
+
 //  MARK: - Network:网络
 public class NetworkInfo{
-    //  MARK:  networkType:网络连接状态(NotReachable/EthernetOrWiFi/WWAN)
+    //  MARK:  networkStatus:网络连接状态(NotReachable/ReachableViaWiFi/ReachableViaWWAN)
     // TODO:
-    public class func networkStatus() -> Reachability.NetworkStatus {
+    public class func status() -> Reachability.NetworkStatus {
         do{
             let  networktype = try Reachability.reachabilityForInternetConnection().currentReachabilityStatus;
             return networktype
@@ -24,8 +25,8 @@ public class NetworkInfo{
         }
     }
     
-    //  MARK: carrierType:运营商(e.g 中国联通)
-    public class func carrierType() -> String {
+    //  MARK: carrier:运营商(e.g 中国联通)
+    public class func carrier() -> String {
         let tNetwork = CTTelephonyNetworkInfo()
         let carrier  = tNetwork.subscriberCellularProvider
         var carrier_name : String?
@@ -44,7 +45,7 @@ public class NetworkInfo{
         let session = NSURLSession.sharedSession()
         var currentIPAddress = "0.0.0.0"
         
-        switch self.networkStatus() {
+        switch self.status() {
         case .NotReachable :
             currentIPAddress = "0.0.0.0"
             completionHandler(currentIPAddress)

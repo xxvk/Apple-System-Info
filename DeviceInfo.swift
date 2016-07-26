@@ -3,7 +3,7 @@
 //  store_killer_ios
 //
 //  Created by 樊半缠 on 16/6/30.
-//  Copyright © 2016年 樊半缠. All rights reserved.
+//  Copyright © 2016年 reformation.tech. All rights reserved.
 //
 import UIKit
 import SystemConfiguration
@@ -11,9 +11,9 @@ import MachO
 import AdSupport
 //  MARK: - Device:硬件
 public class DeviceInfo {
-    //  MARK:  deviceModel:设备型号
+    //  MARK:  model:设备型号
     //(e.g iPhone5,3)
-    class var deviceModel: String {
+    class var model: String {
         var systemInfo : UnsafeMutablePointer<utsname> = UnsafeMutablePointer<utsname>.alloc(1);
         let foo : Int32 = uname(systemInfo)
         print(foo)
@@ -26,13 +26,13 @@ public class DeviceInfo {
         let deviceModel = String(CString: machine!, encoding: NSUTF8StringEncoding)
         return deviceModel!
     }
-    //  MARK:  iOSVersion:系统版本
+    //  MARK:  OSVersion:系统版本
     ///(e.g 8.1 ， 9.3 ， 10.0)
     class var OSVersion: String {
         return UIDevice.currentDevice().systemVersion
     }
-    //  MARK: deviceName:设备名称
-    //(e.g "樊半缠's iPhone")
+    //  MARK: name:设备名称
+    //(e.g "my iPhone")
     class var deviceName: String {
         get{
             return UIDevice.currentDevice().name
@@ -217,7 +217,7 @@ public class DeviceInfo {
     class func cpuUsage_Description() -> String {
         return "\(self.cpuUsage)%"
     }
-    //MARK: cpuUsage percent value (max is 1.0 ,min is 0.0)
+    //MARK: cpuUsage raw value
     class var cpuUsage:Double{
         get{
             var kr = kern_return_t()
