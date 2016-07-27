@@ -33,7 +33,7 @@ public class DeviceInfo {
     }
     //  MARK: name:设备名称
     //(e.g "my iPhone")
-    class var deviceName: String {
+    class var name: String {
         get{
             return UIDevice.currentDevice().name
         }
