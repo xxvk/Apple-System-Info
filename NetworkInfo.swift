@@ -9,33 +9,30 @@
 import Foundation
 import CFNetwork
 import CoreTelephony
-import SwiftyJSON
+import SystemConfiguration
 
 //  MARK: - Network:网络
 public class NetworkInfo{
     //  MARK:  networkStatus:网络连接状态(NotReachable/ReachableViaWiFi/ReachableViaWWAN)
-    // TODO:
-    public class func status() -> Reachability.NetworkStatus {
-        do{
-            let  networktype = try Reachability.reachabilityForInternetConnection().currentReachabilityStatus;
-            return networktype
-        }catch{
-            print(error)
-            return .NotReachable
+    class var status: NetReachability.NetworkStatus {
+        get{
+            return NetReachability.currentReachabilityStatus()
         }
     }
     
     //  MARK: carrier:运营商(e.g 中国联通)
-    public class func carrier() -> String {
-        let tNetwork = CTTelephonyNetworkInfo()
-        let carrier  = tNetwork.subscriberCellularProvider
-        var carrier_name : String?
-        var carrier_code : String?
-        
-        carrier_name = carrier!.carrierName ?? ""
-        carrier_code = carrier!.mobileNetworkCode ?? ""
-        
-        return carrier_name!
+    class var carrier: String {
+        get{
+            let tNetwork = CTTelephonyNetworkInfo()
+            let carrier  = tNetwork.subscriberCellularProvider
+            var carrier_name : String?
+            var carrier_code : String?
+            
+            carrier_name = carrier!.carrierName ?? ""
+            carrier_code = carrier!.mobileNetworkCode ?? ""
+            
+            return carrier_name!
+        }
     }
     
     // MARK:  IP Address
@@ -44,22 +41,98 @@ public class NetworkInfo{
         let SERVICE_BASE_URL = "https://freegeoip.net/json/"
         let session = NSURLSession.sharedSession()
         var currentIPAddress = "0.0.0.0"
-        
-        switch self.status() {
+        completionHandler(currentIPAddress)
+        switch self.status {
         case .NotReachable :
-            currentIPAddress = "0.0.0.0"
+//            currentIPAddress = "0.0.0.0"
             completionHandler(currentIPAddress)
             break
         // WiFi is in use
         case .ReachableViaWiFi,.ReachableViaWWAN:
             session.dataTaskWithURL(NSURL(string: SERVICE_BASE_URL)!, completionHandler: { (data, response, error) -> Void in
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    let json = JSON(data: data!)
-                    currentIPAddress = json["ip"].string!
-                    completionHandler(currentIPAddress)
-                })
+//                let json = JSON(data: data!)
+//                currentIPAddress = json["ip"].string!
+                let json = try? NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+                if let dictionary = json as? NSDictionary {
+                    if let title = dictionary["ip"] as? String {
+                        currentIPAddress = title
+                    }
+                }
+                
+                defer{
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        completionHandler(currentIPAddress)
+                    })
+                }
             }).resume()
             break
+        }
+    }
+}
+public class NetReachability {
+    class var flags : SCNetworkReachabilityFlags{
+        get{
+            var zeroAddress = sockaddr_in()
+            zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+            zeroAddress.sin_family = sa_family_t(AF_INET)
+            
+            
+            let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
+                SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
+            }
+            var foo = SCNetworkReachabilityFlags()
+            
+            if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &foo) {
+                //Success
+            }else{
+                //no Network
+            }
+            return foo
+        }
+    }
+    
+    class func isConnectedToNetwork() -> Bool {
+        
+        let isReachable :Bool =
+            0 != (flags.rawValue & UInt32(kSCNetworkFlagsReachable))
+        
+        let needsConnection =
+            0 != (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired))
+        
+        return (isReachable && !needsConnection)
+    }
+    
+    public enum NetworkStatus: CustomStringConvertible {
+        
+        case NotReachable, ReachableViaWiFi, ReachableViaWWAN
+        
+        public var description: String {
+            switch self {
+            case .ReachableViaWWAN:
+                return "Cellular"
+            case .ReachableViaWiFi:
+                return "WiFi"
+            case .NotReachable:
+                return "No Connection"
+            }
+        }
+    }
+    private class func isOnWWAN() -> Bool {
+        #if os(iOS)
+            return self.flags.contains(.IsWWAN)
+        #else
+            return false
+        #endif
+    }
+    class func currentReachabilityStatus() -> NetworkStatus {
+        if isConnectedToNetwork() {
+            if isOnWWAN() {
+                return .ReachableViaWWAN
+            }else{
+                return .ReachableViaWiFi
+            }
+        }else{
+            return .NotReachable
         }
     }
 }
