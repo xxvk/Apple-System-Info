@@ -10,18 +10,26 @@ import Foundation
 import CFNetwork
 import CoreTelephony
 import SystemConfiguration
+import NetworkExtension
+import FooPrivates
+
+//import NetworkTools
+//import ifaddrs
+//#include <ifaddrs.h>
+//#include <sys/socket.h>
+//#include <net/if.h>
 
 //  MARK: - Network:网络
 public class NetworkInfo{
     //  MARK:  networkStatus:网络连接状态(NotReachable/ReachableViaWiFi/ReachableViaWWAN)
-    class var status: NetReachability.NetworkStatus {
+    public class var status: NetReachability.NetworkStatus {
         get{
             return NetReachability.currentReachabilityStatus()
         }
     }
     
     //  MARK: carrier:运营商(e.g 中国联通)
-    class var carrier: String {
+    public class var carrier: String {
         get{
             let tNetwork = CTTelephonyNetworkInfo()
             let carrier  = tNetwork.subscriberCellularProvider
@@ -36,7 +44,7 @@ public class NetworkInfo{
     }
     
     // MARK:  IP Address
-    class func IPAddress(completionHandler: (String?) -> Void)-> Void {
+    public class func IPAddress(completionHandler: (String?) -> Void)-> Void {
         // Get the current IP Address\
         let SERVICE_BASE_URL = "https://freegeoip.net/json/"
         let session = NSURLSession.sharedSession()
@@ -67,6 +75,100 @@ public class NetworkInfo{
             }).resume()
             break
         }
+    }
+    //  MARK: .usage : 数据使用量
+    public class usage {
+        //number of one MB contains some bytes
+        private static let MB_contains_byte : Int = 1024 * 1024
+        //  MARK: usage.total_MB : 全部 使用量
+        public class var total_MB: Int {
+            get{
+                let bar = self.total_raw / MB_contains_byte
+                
+                return bar
+            }
+        }
+        public class var total_raw: Int {
+            get{
+                let foo = NetUsage.init()
+                
+                let sum = foo.sum_total()
+                
+                return sum
+            }
+        }
+        //  MARK: usage.WiFi_MB : Wi-Fi 使用量
+        public class var WiFi_MB: Int {
+            get{
+                let bar = self.WiFi_raw / MB_contains_byte
+                
+                return bar
+            }
+        }
+        public class var WiFi_raw: Int {
+            get{
+                let foo = NetUsage.init()
+                
+                let sum = foo.sum_WiFi()
+                
+                return sum
+            }
+        }
+        //  MARK: usage.WWAN_MB : 蜂窝数据 使用量
+        public class var WWAN_MB: Int {
+            get{
+                let bar = self.WWAN_raw / MB_contains_byte
+                
+                return bar
+            }
+        }
+        public class var WWAN_raw: Int {
+            get{
+                let foo = NetUsage.init()
+                
+                let sum = foo.sum_WWAN()
+                
+                return sum
+            }
+        }
+    }
+}
+
+private struct NetUsage{
+    let WiFiSent: Int
+    let WiFiReceived: Int
+    let WWANSent: Int
+    let WWANReceived: Int
+    
+    init(){
+        let baz = FooPrivates.ExtraNetwork.getDataCounters()
+        defer{
+            print(baz.count)
+        }
+        if baz.count >= 4
+        {
+            self.WiFiSent = Int.init(baz[0])
+            self.WiFiReceived = Int.init(baz[0])
+            self.WWANSent = Int.init(baz[0])
+            self.WWANReceived = Int.init(baz[0])
+        }else{
+            self.WiFiSent = 0
+            self.WiFiReceived = 0
+            self.WWANSent = 0
+            self.WWANReceived = 0
+        }
+    }
+    
+    func sum_WiFi() -> Int {
+        return self.WiFiReceived + self.WiFiSent
+    }
+    
+    func sum_WWAN() -> Int {
+        return self.WWANReceived + self.WWANSent
+    }
+    
+    func sum_total() -> Int {
+        return self.sum_WiFi() + self.sum_WWAN()
     }
 }
 public class NetReachability {

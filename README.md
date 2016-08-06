@@ -65,6 +65,14 @@ in a word 'Swifty'.
 >carrier:运营商
 >
 >IP Address
+>
+>usage : 数据使用量
+>
+> * .total_MB : 全部 使用量
+> * .WiFi_MB : Wi-Fi 使用量
+> * .WWAN_MB : 蜂窝数据 使用量
+>
+> (able to get current data(byte) per second via set a time interval, will get different value then subtraction them to make it out. 由此可以得出实时的数据传输速度，设置间隔时间获取使用量x1,x2 相减可得出 delta x)
 
 ### BundleInfo.swift
 
@@ -314,9 +322,11 @@ in a word 'Swifty'.
 
 ## Install
 
-Just Drag files to your project with properly address
+![](brief/Apple_System_Info_xcodeproj_path.png)
 
-把文件拖进去就行了
+Just Drag *#Apple_System_Info.xcodeproj#* to your project or xcworkspace
+
+把 *Apple_System_Info.xcodeproj* 拖进 项目或者工作台 去就行了
 
 ## Contact
 if you have any question,contact me.

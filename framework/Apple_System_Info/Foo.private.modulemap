@@ -1,0 +1,4 @@
+module FooPrivate {
+//    header "Obj-C Headers.h"
+    export *
+}

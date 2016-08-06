@@ -13,7 +13,7 @@ import AdSupport
 public class DeviceInfo {
     //  MARK:  model:设备型号
     //(e.g iPhone5,3)
-    class var model: String {
+    public class var model: String {
         var systemInfo : UnsafeMutablePointer<utsname> = UnsafeMutablePointer<utsname>.alloc(1);
         let foo : Int32 = uname(systemInfo)
         print(foo)
@@ -28,19 +28,19 @@ public class DeviceInfo {
     }
     //  MARK:  OSVersion:系统版本
     ///(e.g 8.1 ， 9.3 ， 10.0)
-    class var OSVersion: String {
+    public class var OSVersion: String {
         return UIDevice.currentDevice().systemVersion
     }
     //  MARK: name:设备名称
     //(e.g "my iPhone")
-    class var name: String {
+    public class var name: String {
         get{
             return UIDevice.currentDevice().name
         }
     }
     //  MARK: isJailbreak: 是否越狱
     //(e.g bool)
-    class var isJailbreak: Bool {
+    public class var isJailbreak: Bool {
         get{
             var isJailBroken = false;
             
@@ -63,13 +63,13 @@ public class DeviceInfo {
         }
     }
     //  MARK: IDFA:广告标示符
-    class var IDFA: String {
+    public class var IDFA: String {
         get{
             return  ASIdentifierManager.sharedManager().advertisingIdentifier.UUIDString
         }
     }
     //  MARK: IDFV:Vendor标示符
-    class var IDFV: String {
+    public class var IDFV: String {
         get{
             return  UIDevice.currentDevice().identifierForVendor!.UUIDString
         }
@@ -112,11 +112,7 @@ public class DeviceInfo {
         return freeMemory
     }
     
-    class func freeMemory_Description() -> String {
-        return ""
-    }
-    
-    class func totalMemory() -> Double {
+    public class func totalMemory() -> Double {
         // Find the total amount of memory
         do {
             // Set up the variables
@@ -154,27 +150,26 @@ public class DeviceInfo {
             return -1
         }
     }
-    class func totalMemory_Description() -> String {
-        return ""
-    }
+
     //Get raw value
     
     //  MARK:  Disk:储存
     // Get String Values
-    class func totalDiskSpace_Description()->String {
+    
+    public class func totalDiskSpace_Description() -> String {
         return NSByteCountFormatter.stringFromByteCount(totalDiskSpaceInBytes, countStyle: NSByteCountFormatterCountStyle.Binary)
     }
     
-    class func freeDiskSpace_Description()->String {
+    public class func freeDiskSpace_Description() -> String {
         return NSByteCountFormatter.stringFromByteCount(freeDiskSpaceInBytes, countStyle: NSByteCountFormatterCountStyle.Binary)
     }
     
-    class func usedDiskSpace_Description()->String {
+    public class func usedDiskSpace_Description() -> String {
         return NSByteCountFormatter.stringFromByteCount(usedDiskSpaceInBytes, countStyle: NSByteCountFormatterCountStyle.Binary)
     }
     
     //Get raw value
-    class var totalDiskSpaceInBytes:Int64 {
+    public class var totalDiskSpaceInBytes:Int64 {
         get {
             do {
                 let systemAttributes = try NSFileManager.defaultManager().attributesOfFileSystemForPath(NSHomeDirectory() as String)
@@ -186,7 +181,7 @@ public class DeviceInfo {
         }
     }
     
-    class var freeDiskSpaceInBytes:Int64 {
+    public class var freeDiskSpaceInBytes:Int64 {
         get {
             do {
                 let systemAttributes = try NSFileManager.defaultManager().attributesOfFileSystemForPath(NSHomeDirectory() as String)
@@ -198,14 +193,14 @@ public class DeviceInfo {
         }
     }
     
-    class var usedDiskSpaceInBytes:Int64 {
+    public class var usedDiskSpaceInBytes:Int64 {
         get {
             let usedSpace = totalDiskSpaceInBytes - freeDiskSpaceInBytes
             return usedSpace
         }
     }
     // Tool : Formatter MB only
-    class func MBFormatter(bytes: Int64) -> String {
+    private class func MBFormatter(bytes: Int64) -> String {
         let formatter = NSByteCountFormatter()
         formatter.allowedUnits = NSByteCountFormatterUnits.UseMB
         formatter.countStyle = NSByteCountFormatterCountStyle.Decimal
@@ -214,11 +209,11 @@ public class DeviceInfo {
     }
     
     //  MARK: CPU:中央处理器
-    class func cpuUsage_Description() -> String {
+    public class func cpuUsage_Description() -> String {
         return "\(self.cpuUsage)%"
     }
     //MARK: cpuUsage raw value
-    class var cpuUsage:Double{
+    public class var cpuUsage:Double{
         get{
             var kr = kern_return_t()
             
