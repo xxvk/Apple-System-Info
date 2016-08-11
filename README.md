@@ -324,7 +324,7 @@ in a word 'Swifty'.
 
 ![](brief/Apple_System_Info_xcodeproj_path.png)
 
-Just Drag *#Apple_System_Info.xcodeproj#* to your project or xcworkspace
+Just Drag *#framework/Apple_System_Info.xcodeproj#* to your project or xcworkspace
 
 把 *Apple_System_Info.xcodeproj* 拖进 项目或者工作台 去就行了
 
@@ -333,7 +333,10 @@ if you have any question,contact me.
 
 有问题找大哥
 
-email:xxvk@outlook.com
+email: [xxvk@outlook.com](mailto:xxvk@outlook.com)
 
-wechat:phrekn
+wechat: phrekn
 
+github: [xxvk](https://github.com/xxvk)
+
+website: [reformation.tech](http://reformation.tech)

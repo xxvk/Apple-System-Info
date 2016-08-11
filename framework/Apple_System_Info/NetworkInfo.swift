@@ -13,12 +13,6 @@ import SystemConfiguration
 import NetworkExtension
 import FooPrivates
 
-//import NetworkTools
-//import ifaddrs
-//#include <ifaddrs.h>
-//#include <sys/socket.h>
-//#include <net/if.h>
-
 //  MARK: - Network:网络
 public class NetworkInfo{
     //  MARK:  networkStatus:网络连接状态(NotReachable/ReachableViaWiFi/ReachableViaWWAN)
@@ -52,20 +46,23 @@ public class NetworkInfo{
         completionHandler(currentIPAddress)
         switch self.status {
         case .NotReachable :
-//            currentIPAddress = "0.0.0.0"
             completionHandler(currentIPAddress)
             break
         // WiFi is in use
         case .ReachableViaWiFi,.ReachableViaWWAN:
             session.dataTaskWithURL(NSURL(string: SERVICE_BASE_URL)!, completionHandler: { (data, response, error) -> Void in
-//                let json = JSON(data: data!)
-//                currentIPAddress = json["ip"].string!
-                let json = try? NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
-                if let dictionary = json as? NSDictionary {
-                    if let title = dictionary["ip"] as? String {
-                        currentIPAddress = title
+                if data != nil{
+                    let rawData: NSData! = data
+                    let json = try? NSJSONSerialization.JSONObjectWithData(rawData!, options: .AllowFragments)
+                    if let dictionary = json as? NSDictionary {
+                        if let title = dictionary["ip"] as? String {
+                            currentIPAddress = title
+                        }
                     }
+                }else{
+                    
                 }
+                
                 
                 defer{
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -80,6 +77,7 @@ public class NetworkInfo{
     public class usage {
         //number of one MB contains some bytes
         private static let MB_contains_byte : Int = 1024 * 1024
+        
         //  MARK: usage.total_MB : 全部 使用量
         public class var total_MB: Int {
             get{
@@ -97,7 +95,40 @@ public class NetworkInfo{
                 return sum
             }
         }
-        //  MARK: usage.WiFi_MB : Wi-Fi 使用量
+        //  MARK: usage.total_uploaded ／ total_downloaded : 全部 上传／下载 量
+        public class var total_uploaded_MB: Int {
+            get{
+                let bar = self.total_uploaded_raw / MB_contains_byte
+                
+                return bar
+            }
+        }
+        public class var total_uploaded_raw: Int {
+            get{
+                let foo = NetUsage.init()
+                
+                let sum = foo.sum_sent()
+                
+                return sum
+            }
+        }
+        public class var total_downloaded_MB: Int {
+            get{
+                let bar = self.total_downloaded_raw / MB_contains_byte
+                
+                return bar
+            }
+        }
+        public class var total_downloaded_raw: Int {
+            get{
+                let foo = NetUsage.init()
+                
+                let sum = foo.sum_received()
+                
+                return sum
+            }
+        }
+        //  MARK: usage.WiFi : Wi-Fi 使用量
         public class var WiFi_MB: Int {
             get{
                 let bar = self.WiFi_raw / MB_contains_byte
@@ -114,7 +145,7 @@ public class NetworkInfo{
                 return sum
             }
         }
-        //  MARK: usage.WWAN_MB : 蜂窝数据 使用量
+        //  MARK: usage.WWAN : 蜂窝数据 使用量
         public class var WWAN_MB: Int {
             get{
                 let bar = self.WWAN_raw / MB_contains_byte
@@ -148,9 +179,9 @@ private struct NetUsage{
         if baz.count >= 4
         {
             self.WiFiSent = Int.init(baz[0])
-            self.WiFiReceived = Int.init(baz[0])
-            self.WWANSent = Int.init(baz[0])
-            self.WWANReceived = Int.init(baz[0])
+            self.WiFiReceived = Int.init(baz[1])
+            self.WWANSent = Int.init(baz[2])
+            self.WWANReceived = Int.init(baz[3])
         }else{
             self.WiFiSent = 0
             self.WiFiReceived = 0
@@ -169,6 +200,14 @@ private struct NetUsage{
     
     func sum_total() -> Int {
         return self.sum_WiFi() + self.sum_WWAN()
+    }
+    
+    func sum_sent() -> Int {
+        return self.WiFiSent + self.WWANSent
+    }
+    
+    func sum_received() -> Int {
+        return self.WiFiReceived + self.WWANReceived
     }
 }
 public class NetReachability {

@@ -2,8 +2,8 @@
 //  ExtraNetwork.h
 //  Apple_System_Info
 //
-//  Created by ea on 16/8/5.
-//  Copyright © 2016年 vk. All rights reserved.
+//  Created by 樊半缠 on 16/8/5.
+//  Copyright © 2016年 reformation.tech. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

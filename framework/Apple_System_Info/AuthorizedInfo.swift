@@ -12,7 +12,7 @@ import CoreLocation
 //  MARK: - Authorized:权限
 public class AuthorizedInfo{
     //  MARK: isLocationAuthorized:地理位置是否可用(e.g bool)
-    class var Location: Bool {
+    public class var Location: Bool {
         get{
             let  status : CLAuthorizationStatus = CLLocationManager.authorizationStatus();
             if (status == CLAuthorizationStatus.NotDetermined

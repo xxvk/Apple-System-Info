@@ -25,6 +25,8 @@ class Device: UITableViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        self.tableView.reloadData()
+        
         self.Name.text = Apple_System_Info.DeviceInfo.name
         self.OSVersion.text = Apple_System_Info.DeviceInfo.OSVersion
         self.Model.text = Apple_System_Info.DeviceInfo.model
@@ -32,6 +34,59 @@ class Device: UITableViewController {
         
         self.IDFA.text = Apple_System_Info.DeviceInfo.IDFA
         self.IDFV.text = Apple_System_Info.DeviceInfo.IDFV
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.section == 1 {
+            let cell = tableView.cellForRowAtIndexPath(indexPath)
+            
+            let menu = ActionMenu.init(actions: self.actions, point: CGPointZero, inView: cell!.contentView)
+            
+            menu.show(animated: true, handler: { () in
+                
+            })
+        }
+    }
+    
+}
+
+extension Device: ActionableProtocol {
+    
+    var actions: [UIMenuItem] {
+        get{
+            let copyItem = UIMenuItem.init(title: "Copy",
+                                           action: #selector(self.coptText))
+            let replyItem = UIMenuItem.init(title: "回复",
+                                            action:#selector(self.reply))
+            let reportItem = UIMenuItem.init(title: "举报",
+                                             action: #selector(self.warn))
+            let foo = [copyItem, replyItem, reportItem]
+            return foo
+        }
+    }
+    
+    
+    override func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+
+    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+        for item in self.actions {
+            if action.description == item.action.description{
+                return true
+            }
+        }
+        return false
+    }
+
+    func coptText() -> Void {
+        
+    }
+    func reply() -> Void {
+        
+    }
+    func warn() -> Void {
+        
     }
 }
 
@@ -51,7 +106,7 @@ class HardwareContainer: UIViewController {
     
     @IBOutlet var diskSpace_Container: UIView!
     @IBOutlet var diskSpace_Progress: NSLayoutConstraint!
-    //  MARK: - life cycle:
+    //  MARK:  life cycle:
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -82,7 +137,7 @@ class HardwareContainer: UIViewController {
     }
 }
 extension HardwareContainer{
-    //  MARK: - timer:
+    //  MARK:  timer:
     private func startTimer() -> Void
     {
         if timer != nil {
@@ -109,39 +164,40 @@ extension HardwareContainer{
                                   suffix: "MB")
     }
 }
-public class DeviceInfoFormatter {
-    //  MARK: - logic_for系统信息:SystemInfo
-    public class var diskSpace_statu_Description : String{
+//  MARK: - DeviceInfoFormatter : 把 Apple_System_Info 转换成这里需要的格式
+private class DeviceInfoFormatter {
+    
+    private class var diskSpace_statu_Description : String{
         get{
             return "存储空间:\(Apple_System_Info.DeviceInfo.totalDiskSpace_Description())  已用:\(Apple_System_Info.DeviceInfo.usedDiskSpace_Description())  空闲:\(Apple_System_Info.DeviceInfo.freeDiskSpace_Description())"
         }
     }
-    public class var diskSpace_used_Description : String{
+    private class var diskSpace_used_Description : String{
         get{
             return "已用:\(Apple_System_Info.DeviceInfo.usedDiskSpace_Description())"
         }
     }
-    public class var diskSpace_free_Description : String{
+    private class var diskSpace_free_Description : String{
         get{
             return "空闲:\(Apple_System_Info.DeviceInfo.freeDiskSpace_Description())"
         }
     }
-    public class var diskSpace_total_Description : String{
+    private class var diskSpace_total_Description : String{
         get{
             return "存储空间:\(Apple_System_Info.DeviceInfo.totalDiskSpace_Description())"
         }
     }
-    public class var diskSpace_free_Percent : CGFloat{
+    private class var diskSpace_free_Percent : CGFloat{
         get{
             return (CGFloat.init(Apple_System_Info.DeviceInfo.freeDiskSpaceInBytes)  / CGFloat.init(Apple_System_Info.DeviceInfo.totalDiskSpaceInBytes))
         }
     }
-    public class var ram_used_Value : CGFloat{
+    private class var ram_used_Value : CGFloat{
         get{
             return CGFloat.init(Apple_System_Info.DeviceInfo.totalMemory() - Apple_System_Info.DeviceInfo.freeMemory())
         }
     }
-    public class var ram_total_Value : CGFloat{
+    private class var ram_total_Value : CGFloat{
         get{
             return CGFloat.init(Apple_System_Info.DeviceInfo.totalMemory())
         }
@@ -153,28 +209,28 @@ public class DeviceInfoFormatter {
         }
     }
     //MARK: cpuUsage raw value
-    public class var cpu_usage_Value:CGFloat{
+    private class var cpu_usage_Value:CGFloat{
         get{
             return CGFloat.init(Apple_System_Info.DeviceInfo.cpuUsage)
         }
     }
-    //  MARK: - :
-    public class var device_model_Value : String{
+    //  MARK:  :
+    private class var device_model_Value : String{
         get{
             return Apple_System_Info.DeviceInfo.model
         }
     }
-    public class var device_name_Value : String{
+    private class var device_name_Value : String{
         get{
             return Apple_System_Info.DeviceInfo.name
         }
     }
-    public class var OS_version_Value : String{
+    private class var OS_version_Value : String{
         get{
             return Apple_System_Info.DeviceInfo.OSVersion
         }
     }
-    public class var isJailbreak_Description : String{
+    private class var isJailbreak_Description : String{
         get{
             return Apple_System_Info.DeviceInfo.isJailbreak.description
         }

@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040F1BC21D59F2D700A95E92 /* ActionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F1BC11D59F2D700A95E92 /* ActionMenu.swift */; };
+		0428DE511D585F67003E5409 /* Authorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428DE501D585F67003E5409 /* Authorized.swift */; };
+		0428DE531D586032003E5409 /* Bundles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428DE521D586032003E5409 /* Bundles.swift */; };
+		04528B741D55D07C0092E809 /* ScrollableGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04528B731D55D07C0092E809 /* ScrollableGraphView.swift */; };
+		04528B761D55D6F90092E809 /* UIColor+colorFromHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04528B751D55D6F90092E809 /* UIColor+colorFromHex.swift */; };
 		04627F211D531E7400B9EBC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04627F201D531E7400B9EBC8 /* AppDelegate.swift */; };
 		04627F281D531E7400B9EBC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04627F261D531E7400B9EBC8 /* Main.storyboard */; };
 		04627F2A1D531E7400B9EBC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04627F291D531E7400B9EBC8 /* Assets.xcassets */; };
@@ -54,6 +59,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		040F1BC11D59F2D700A95E92 /* ActionMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionMenu.swift; sourceTree = "<group>"; };
+		0428DE501D585F67003E5409 /* Authorized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authorized.swift; sourceTree = "<group>"; };
+		0428DE521D586032003E5409 /* Bundles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bundles.swift; sourceTree = "<group>"; };
+		04528B731D55D07C0092E809 /* ScrollableGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollableGraphView.swift; sourceTree = "<group>"; };
+		04528B751D55D6F90092E809 /* UIColor+colorFromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+colorFromHex.swift"; sourceTree = "<group>"; };
 		04627F1D1D531E7400B9EBC8 /* iOS-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04627F201D531E7400B9EBC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04627F271D531E7400B9EBC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -124,6 +134,8 @@
 		04627F1F1D531E7400B9EBC8 /* iOS-Example */ = {
 			isa = PBXGroup;
 			children = (
+				0428DE501D585F67003E5409 /* Authorized.swift */,
+				0428DE521D586032003E5409 /* Bundles.swift */,
 				04627F941D53272700B9EBC8 /* Device.swift */,
 				04627F961D53274900B9EBC8 /* Network.swift */,
 				04627F931D5326FC00B9EBC8 /* Controllers */,
@@ -158,6 +170,9 @@
 		04627F8C1D5325D300B9EBC8 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				040F1BC11D59F2D700A95E92 /* ActionMenu.swift */,
+				04528B751D55D6F90092E809 /* UIColor+colorFromHex.swift */,
+				04528B731D55D07C0092E809 /* ScrollableGraphView.swift */,
 				04627F981D532F5C00B9EBC8 /* CarouselView.swift */,
 				04627F8D1D5325D300B9EBC8 /* Dashboard.swift */,
 				04627F8E1D5325D300B9EBC8 /* PNBarChart */,
@@ -324,9 +339,14 @@
 				04627F971D53274900B9EBC8 /* Network.swift in Sources */,
 				04627F911D5325D300B9EBC8 /* Dashboard.swift in Sources */,
 				04627F921D5325D300B9EBC8 /* PointerView.swift in Sources */,
+				04528B741D55D07C0092E809 /* ScrollableGraphView.swift in Sources */,
 				04627F211D531E7400B9EBC8 /* AppDelegate.swift in Sources */,
+				04528B761D55D6F90092E809 /* UIColor+colorFromHex.swift in Sources */,
+				040F1BC21D59F2D700A95E92 /* ActionMenu.swift in Sources */,
 				04627F991D532F5C00B9EBC8 /* CarouselView.swift in Sources */,
+				0428DE511D585F67003E5409 /* Authorized.swift in Sources */,
 				04627F951D53272700B9EBC8 /* Device.swift in Sources */,
+				0428DE531D586032003E5409 /* Bundles.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
