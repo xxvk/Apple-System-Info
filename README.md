@@ -1,6 +1,6 @@
 # Apple-System-Info(Swift)
 
-[![Swift](https://img.shields.io/badge/swift-2.3-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift](https://img.shields.io/badge/swift-3.0-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Platforms](https://img.shields.io/badge/platform-osx%20%7C%20ios%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)](https://developer.apple.com/swift/)
 [![License](https://img.shields.io/badge/license-MIT-71787A.svg)](https://tldrlegal.com/license/mit-license)
 [![Join the chat at https://gitter.im/xxvk/Apple-System-Info](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/xxvk/Apple-System-Info?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -58,9 +58,9 @@ in a word 'Swifty'.
 
 >status:网络连接状态:
 >
-> * NotReachable
-> * ReachableViaWiFi
-> * ReachableViaWWAN
+>* NotReachable
+>* ReachableViaWiFi
+>* ReachableViaWWAN
 >
 >carrier:运营商
 >
@@ -68,9 +68,9 @@ in a word 'Swifty'.
 >
 >usage : 数据使用量
 >
-> * .total_MB : 全部 使用量
-> * .WiFi_MB : Wi-Fi 使用量
-> * .WWAN_MB : 蜂窝数据 使用量
+>* .total_MB : 全部 使用量
+>* .WiFi_MB : Wi-Fi 使用量
+>* .WWAN_MB : 蜂窝数据 使用量
 >
 > (able to get current data(byte) per second via set a time interval, will get different value then subtraction them to make it out. 由此可以得出实时的数据传输速度，设置间隔时间获取使用量x1,x2 相减可得出 delta x)
 
@@ -203,12 +203,12 @@ in a word 'Swifty'.
 >
 >Installation files : APFiles
 >
-> * FileDescriptionKey : 用来显示在Finder的信息窗口中的简短描述
-> * DisplayedAsContainer : 如果值为“Yes”，该项目作为一个目录图标显示在信息面板中；否则，它被显示为一个文档图标
-> * FileDestinationPath : 一个安装组件的相对路径
-> * FileName : 文件或目录的名称
-> * FileSourcePath : 指向应用程序包中组件的路径，相对与APInstallerURL路径
-> * InstallAction : 操纵组件的动作：“Copy”或者“Open”
+>* FileDescriptionKey : 用来显示在Finder的信息窗口中的简短描述
+>* DisplayedAsContainer : 如果值为“Yes”，该项目作为一个目录图标显示在信息面板中；否则，它被显示为一个文档图标
+>* FileDestinationPath : 一个安装组件的相对路径
+>* FileName : 文件或目录的名称
+>* FileSourcePath : 指向应用程序包中组件的路径，相对与APInstallerURL路径
+>* InstallAction : 操纵组件的动作：“Copy”或者“Open”
 
 ###### Default Resources - 访问默认资源的扩展
 
@@ -218,27 +218,27 @@ in a word 'Swifty'.
 >
 >LaunchImageFile :启动图像。根据不同设备来设置图片的规格大小
 >
-> * default
-> * ipad
-> * iphone
+>* default
+>* ipad
+>* iphone
 >
 >NSMainNibFile :包含了一个含有应用程序的主nib文件名（不包含.nib文件扩展名）的字符串。一个nib文件作为一个Interface Builder的存档文件，含有对用户界面的详细描述信息以及那些界面中的对象之间的关联信息。当应用程序被启动时，主nib文件会被自动装载。Mac OS X会寻找与应用程序名相匹配的nib文件
 >
-> * default
-> * ipad
-> * iphone
+>* default
+>* ipad
+>* iphone
 >
 >UIMainStoryboardFile :故事板文件名
 >
-> * default
-> * ipad
-> * iphone
+>* default
+>* ipad
+>* iphone
 >
 >UISupportedInterfaceOrientations :设定应用程序的显示模式
 >
-> * default
-> * ipad
-> * iphone
+>* default
+>* ipad
+>* iphone
 >
 >NSPrefPaneIconFile
 >

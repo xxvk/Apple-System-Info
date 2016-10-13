@@ -10,24 +10,12 @@
 		041D54CF1D54ABBD00C39874 /* ExtraNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 041D54CD1D54ABBD00C39874 /* ExtraNetwork.h */; };
 		041D54D01D54ABBD00C39874 /* ExtraNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 041D54CE1D54ABBD00C39874 /* ExtraNetwork.m */; };
 		04627F681D53209600B9EBC8 /* Apple_System_Info.h in Headers */ = {isa = PBXBuildFile; fileRef = 04627F671D53209600B9EBC8 /* Apple_System_Info.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		04627F6F1D53209600B9EBC8 /* Apple_System_Info.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04627F641D53209600B9EBC8 /* Apple_System_Info.framework */; };
-		04627F741D53209600B9EBC8 /* Apple_System_InfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04627F731D53209600B9EBC8 /* Apple_System_InfoTests.swift */; };
 		04627F831D53211900B9EBC8 /* AuthorizedInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04627F7F1D53211900B9EBC8 /* AuthorizedInfo.swift */; };
 		04627F841D53211900B9EBC8 /* BundleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04627F801D53211900B9EBC8 /* BundleInfo.swift */; };
 		04627F851D53211900B9EBC8 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04627F811D53211900B9EBC8 /* DeviceInfo.swift */; };
 		04627F861D53211900B9EBC8 /* NetworkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04627F821D53211900B9EBC8 /* NetworkInfo.swift */; };
 		04627F9E1D533D5400B9EBC8 /* Foo.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04627F9D1D533D5400B9EBC8 /* Foo.xcconfig */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		04627F701D53209600B9EBC8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 04627F5B1D53209600B9EBC8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 04627F631D53209600B9EBC8;
-			remoteInfo = Apple_System_Info;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		041529DC1D546AB000D8E1A7 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
@@ -36,9 +24,6 @@
 		04627F641D53209600B9EBC8 /* Apple_System_Info.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Apple_System_Info.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04627F671D53209600B9EBC8 /* Apple_System_Info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Apple_System_Info.h; sourceTree = "<group>"; };
 		04627F691D53209600B9EBC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04627F6E1D53209600B9EBC8 /* Apple_System_InfoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Apple_System_InfoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		04627F731D53209600B9EBC8 /* Apple_System_InfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Apple_System_InfoTests.swift; sourceTree = "<group>"; };
-		04627F751D53209600B9EBC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04627F7F1D53211900B9EBC8 /* AuthorizedInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizedInfo.swift; sourceTree = "<group>"; };
 		04627F801D53211900B9EBC8 /* BundleInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BundleInfo.swift; sourceTree = "<group>"; };
 		04627F811D53211900B9EBC8 /* DeviceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
@@ -52,14 +37,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		04627F6B1D53209600B9EBC8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04627F6F1D53209600B9EBC8 /* Apple_System_Info.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,7 +56,6 @@
 			children = (
 				04627F9D1D533D5400B9EBC8 /* Foo.xcconfig */,
 				04627F661D53209600B9EBC8 /* Apple_System_Info */,
-				04627F721D53209600B9EBC8 /* Apple_System_InfoTests */,
 				04627F651D53209600B9EBC8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				04627F641D53209600B9EBC8 /* Apple_System_Info.framework */,
-				04627F6E1D53209600B9EBC8 /* Apple_System_InfoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,15 +83,6 @@
 				041D54CE1D54ABBD00C39874 /* ExtraNetwork.m */,
 			);
 			path = Apple_System_Info;
-			sourceTree = "<group>";
-		};
-		04627F721D53209600B9EBC8 /* Apple_System_InfoTests */ = {
-			isa = PBXGroup;
-			children = (
-				04627F731D53209600B9EBC8 /* Apple_System_InfoTests.swift */,
-				04627F751D53209600B9EBC8 /* Info.plist */,
-			);
-			path = Apple_System_InfoTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,24 +118,6 @@
 			productReference = 04627F641D53209600B9EBC8 /* Apple_System_Info.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		04627F6D1D53209600B9EBC8 /* Apple_System_InfoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 04627F7B1D53209600B9EBC8 /* Build configuration list for PBXNativeTarget "Apple_System_InfoTests" */;
-			buildPhases = (
-				04627F6A1D53209600B9EBC8 /* Sources */,
-				04627F6B1D53209600B9EBC8 /* Frameworks */,
-				04627F6C1D53209600B9EBC8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				04627F711D53209600B9EBC8 /* PBXTargetDependency */,
-			);
-			name = Apple_System_InfoTests;
-			productName = Apple_System_InfoTests;
-			productReference = 04627F6E1D53209600B9EBC8 /* Apple_System_InfoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -182,9 +130,7 @@
 				TargetAttributes = {
 					04627F631D53209600B9EBC8 = {
 						CreatedOnToolsVersion = 7.3.1;
-					};
-					04627F6D1D53209600B9EBC8 = {
-						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -201,7 +147,6 @@
 			projectRoot = "";
 			targets = (
 				04627F631D53209600B9EBC8 /* Apple_System_Info */,
-				04627F6D1D53209600B9EBC8 /* Apple_System_InfoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -212,13 +157,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				04627F9E1D533D5400B9EBC8 /* Foo.xcconfig in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		04627F6C1D53209600B9EBC8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,23 +175,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		04627F6A1D53209600B9EBC8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04627F741D53209600B9EBC8 /* Apple_System_InfoTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		04627F711D53209600B9EBC8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 04627F631D53209600B9EBC8 /* Apple_System_Info */;
-			targetProxy = 04627F701D53209600B9EBC8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		04627F761D53209600B9EBC8 /* Debug */ = {
@@ -365,6 +287,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -383,26 +306,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "reform.Apple-System-Info.FMWK";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		04627F7C1D53209600B9EBC8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Apple_System_InfoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "reform.Apple-System-InfoTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		04627F7D1D53209600B9EBC8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Apple_System_InfoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "reform.Apple-System-InfoTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -423,15 +327,6 @@
 			buildConfigurations = (
 				04627F791D53209600B9EBC8 /* Debug */,
 				04627F7A1D53209600B9EBC8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		04627F7B1D53209600B9EBC8 /* Build configuration list for PBXNativeTarget "Apple_System_InfoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				04627F7C1D53209600B9EBC8 /* Debug */,
-				04627F7D1D53209600B9EBC8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

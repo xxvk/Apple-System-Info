@@ -14,16 +14,16 @@ import NetworkExtension
 import FooPrivates
 
 //  MARK: - Network:网络
-public class NetworkInfo{
+open class NetworkInfo{
     //  MARK:  networkStatus:网络连接状态(NotReachable/ReachableViaWiFi/ReachableViaWWAN)
-    public class var status: NetReachability.NetworkStatus {
+    open class var status: NetReachability.NetworkStatus {
         get{
             return NetReachability.currentReachabilityStatus()
         }
     }
     
     //  MARK: carrier:运营商(e.g 中国联通)
-    public class var carrier: String {
+    open class var carrier: String {
         get{
             let tNetwork = CTTelephonyNetworkInfo()
             let carrier  = tNetwork.subscriberCellularProvider
@@ -38,22 +38,22 @@ public class NetworkInfo{
     }
     
     // MARK:  IP Address
-    public class func IPAddress(completionHandler: (String?) -> Void)-> Void {
+    open class func IPAddress(_ completionHandler: @escaping (String?) -> Void)-> Void {
         // Get the current IP Address\
         let SERVICE_BASE_URL = "https://freegeoip.net/json/"
-        let session = NSURLSession.sharedSession()
+        let session = URLSession.shared
         var currentIPAddress = "0.0.0.0"
         completionHandler(currentIPAddress)
         switch self.status {
-        case .NotReachable :
+        case .notReachable :
             completionHandler(currentIPAddress)
             break
         // WiFi is in use
-        case .ReachableViaWiFi,.ReachableViaWWAN:
-            session.dataTaskWithURL(NSURL(string: SERVICE_BASE_URL)!, completionHandler: { (data, response, error) -> Void in
+        case .reachableViaWiFi,.reachableViaWWAN:
+            session.dataTask(with: URL(string: SERVICE_BASE_URL)!, completionHandler: { (data, response, error) -> Void in
                 if data != nil{
-                    let rawData: NSData! = data
-                    let json = try? NSJSONSerialization.JSONObjectWithData(rawData!, options: .AllowFragments)
+                    let rawData: Data! = data
+                    let json = try? JSONSerialization.jsonObject(with: rawData!, options: .allowFragments)
                     if let dictionary = json as? NSDictionary {
                         if let title = dictionary["ip"] as? String {
                             currentIPAddress = title
@@ -65,7 +65,7 @@ public class NetworkInfo{
                 
                 
                 defer{
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    DispatchQueue.main.async(execute: { () -> Void in
                         completionHandler(currentIPAddress)
                     })
                 }
@@ -74,19 +74,19 @@ public class NetworkInfo{
         }
     }
     //  MARK: .usage : 数据使用量
-    public class usage {
+    open class usage {
         //number of one MB contains some bytes
-        private static let MB_contains_byte : Int = 1024 * 1024
+        fileprivate static let MB_contains_byte : Int = 1024 * 1024
         
         //  MARK: usage.total_MB : 全部 使用量
-        public class var total_MB: Int {
+        open class var total_MB: Int {
             get{
                 let bar = self.total_raw / MB_contains_byte
                 
                 return bar
             }
         }
-        public class var total_raw: Int {
+        open class var total_raw: Int {
             get{
                 let foo = NetUsage.init()
                 
@@ -96,14 +96,14 @@ public class NetworkInfo{
             }
         }
         //  MARK: usage.total_uploaded ／ total_downloaded : 全部 上传／下载 量
-        public class var total_uploaded_MB: Int {
+        open class var total_uploaded_MB: Int {
             get{
                 let bar = self.total_uploaded_raw / MB_contains_byte
                 
                 return bar
             }
         }
-        public class var total_uploaded_raw: Int {
+        open class var total_uploaded_raw: Int {
             get{
                 let foo = NetUsage.init()
                 
@@ -112,14 +112,14 @@ public class NetworkInfo{
                 return sum
             }
         }
-        public class var total_downloaded_MB: Int {
+        open class var total_downloaded_MB: Int {
             get{
                 let bar = self.total_downloaded_raw / MB_contains_byte
                 
                 return bar
             }
         }
-        public class var total_downloaded_raw: Int {
+        open class var total_downloaded_raw: Int {
             get{
                 let foo = NetUsage.init()
                 
@@ -129,14 +129,14 @@ public class NetworkInfo{
             }
         }
         //  MARK: usage.WiFi : Wi-Fi 使用量
-        public class var WiFi_MB: Int {
+        open class var WiFi_MB: Int {
             get{
                 let bar = self.WiFi_raw / MB_contains_byte
                 
                 return bar
             }
         }
-        public class var WiFi_raw: Int {
+        open class var WiFi_raw: Int {
             get{
                 let foo = NetUsage.init()
                 
@@ -146,14 +146,14 @@ public class NetworkInfo{
             }
         }
         //  MARK: usage.WWAN : 蜂窝数据 使用量
-        public class var WWAN_MB: Int {
+        open class var WWAN_MB: Int {
             get{
                 let bar = self.WWAN_raw / MB_contains_byte
                 
                 return bar
             }
         }
-        public class var WWAN_raw: Int {
+        open class var WWAN_raw: Int {
             get{
                 let foo = NetUsage.init()
                 
@@ -174,14 +174,14 @@ private struct NetUsage{
     init(){
         let baz = FooPrivates.ExtraNetwork.getDataCounters()
         defer{
-            print(baz.count)
+            print(baz?.count)
         }
-        if baz.count >= 4
+        if (baz?.count)! >= 4
         {
-            self.WiFiSent = Int.init(baz[0])
-            self.WiFiReceived = Int.init(baz[1])
-            self.WWANSent = Int.init(baz[2])
-            self.WWANReceived = Int.init(baz[3])
+            self.WiFiSent = Int.init((baz?[0])!)
+            self.WiFiReceived = Int.init((baz?[1])!)
+            self.WWANSent = Int.init((baz?[2])!)
+            self.WWANReceived = Int.init((baz?[3])!)
         }else{
             self.WiFiSent = 0
             self.WiFiReceived = 0
@@ -210,17 +210,18 @@ private struct NetUsage{
         return self.WiFiReceived + self.WWANReceived
     }
 }
-public class NetReachability {
+open class NetReachability {
     class var flags : SCNetworkReachabilityFlags{
         get{
-            var zeroAddress = sockaddr_in()
-            zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
-            zeroAddress.sin_family = sa_family_t(AF_INET)
+//            var zeroAddress = sockaddr_in()
+            var zeroAddress = sockaddr()
+            zeroAddress.sa_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+            zeroAddress.sa_family = sa_family_t(AF_INET)
             
-            
-            let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
-                SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
-            }
+            let defaultRouteReachability = SCNetworkReachabilityCreateWithAddress( nil, &zeroAddress)
+//            let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+//                SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
+//            }
             var foo = SCNetworkReachabilityFlags()
             
             if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &foo) {
@@ -245,22 +246,22 @@ public class NetReachability {
     
     public enum NetworkStatus: CustomStringConvertible {
         
-        case NotReachable, ReachableViaWiFi, ReachableViaWWAN
+        case notReachable, reachableViaWiFi, reachableViaWWAN
         
         public var description: String {
             switch self {
-            case .ReachableViaWWAN:
+            case .reachableViaWWAN:
                 return "Cellular"
-            case .ReachableViaWiFi:
+            case .reachableViaWiFi:
                 return "WiFi"
-            case .NotReachable:
+            case .notReachable:
                 return "No Connection"
             }
         }
     }
-    private class func isOnWWAN() -> Bool {
+    fileprivate class func isOnWWAN() -> Bool {
         #if os(iOS)
-            return self.flags.contains(.IsWWAN)
+            return self.flags.contains(.isWWAN)
         #else
             return false
         #endif
@@ -268,12 +269,12 @@ public class NetReachability {
     class func currentReachabilityStatus() -> NetworkStatus {
         if isConnectedToNetwork() {
             if isOnWWAN() {
-                return .ReachableViaWWAN
+                return .reachableViaWWAN
             }else{
-                return .ReachableViaWiFi
+                return .reachableViaWiFi
             }
         }else{
-            return .NotReachable
+            return .notReachable
         }
     }
 }

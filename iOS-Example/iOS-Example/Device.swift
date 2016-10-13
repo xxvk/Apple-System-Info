@@ -22,7 +22,7 @@ class Device: UITableViewController {
     
     @IBOutlet var IDFV: UILabel!
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.tableView.reloadData()
@@ -36,11 +36,11 @@ class Device: UITableViewController {
         self.IDFV.text = Apple_System_Info.DeviceInfo.IDFV
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.section == 1 {
-            let cell = tableView.cellForRowAtIndexPath(indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (indexPath as NSIndexPath).section == 1 {
+            let cell = tableView.cellForRow(at: indexPath)
             
-            let menu = ActionMenu.init(actions: self.actions, point: CGPointZero, inView: cell!.contentView)
+            let menu = ActionMenu.init(actions: self.actions, point: CGPoint.zero, inView: cell!.contentView)
             
             menu.show(animated: true, handler: { () in
                 
@@ -66,11 +66,11 @@ extension Device: ActionableProtocol {
     }
     
     
-    override func canBecomeFirstResponder() -> Bool {
+    internal override var canBecomeFirstResponder : Bool {
         return true
     }
 
-    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+    internal override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         for item in self.actions {
             if action.description == item.action.description{
                 return true
@@ -91,9 +91,9 @@ extension Device: ActionableProtocol {
 }
 
 class HardwareContainer: UIViewController {
-    private var timer: NSTimer?
+    fileprivate var timer: Timer?
     /// timer间隔时间,默认2.0秒
-    var timeInterval: NSTimeInterval = 1.0 {
+    var timeInterval: TimeInterval = 1.0 {
         didSet{
             
         }
@@ -107,7 +107,7 @@ class HardwareContainer: UIViewController {
     @IBOutlet var diskSpace_Container: UIView!
     @IBOutlet var diskSpace_Progress: NSLayoutConstraint!
     //  MARK:  life cycle:
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
     }
@@ -122,23 +122,23 @@ class HardwareContainer: UIViewController {
         self.diskSpace_Label.text = DeviceInfoFormatter.diskSpace_statu_Description
         self.reloadData()
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1), dispatch_get_main_queue()) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(1) / Double(NSEC_PER_SEC)) {
             self.diskSpace_Progress.constant = self.diskSpace_Container.bounds.width * DeviceInfoFormatter.diskSpace_free_Percent
         }
     }
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.startTimer()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.stopTimer()
     }
 }
 extension HardwareContainer{
     //  MARK:  timer:
-    private func startTimer() -> Void
+    fileprivate func startTimer() -> Void
     {
         if timer != nil {
             timer?.invalidate()
@@ -149,12 +149,12 @@ extension HardwareContainer{
             self.reloadData()
         }
     }
-    private func stopTimer() -> Void
+    fileprivate func stopTimer() -> Void
     {
         timer?.invalidate()
         timer = nil
     }
-    private func reloadData() -> Void
+    fileprivate func reloadData() -> Void
     {
         self.cpu_Dashboard.change(DeviceInfoFormatter.cpu_usage_Value,
                                   total: 100.0,
@@ -167,37 +167,37 @@ extension HardwareContainer{
 //  MARK: - DeviceInfoFormatter : 把 Apple_System_Info 转换成这里需要的格式
 private class DeviceInfoFormatter {
     
-    private class var diskSpace_statu_Description : String{
+    fileprivate class var diskSpace_statu_Description : String{
         get{
             return "存储空间:\(Apple_System_Info.DeviceInfo.totalDiskSpace_Description())  已用:\(Apple_System_Info.DeviceInfo.usedDiskSpace_Description())  空闲:\(Apple_System_Info.DeviceInfo.freeDiskSpace_Description())"
         }
     }
-    private class var diskSpace_used_Description : String{
+    fileprivate class var diskSpace_used_Description : String{
         get{
             return "已用:\(Apple_System_Info.DeviceInfo.usedDiskSpace_Description())"
         }
     }
-    private class var diskSpace_free_Description : String{
+    fileprivate class var diskSpace_free_Description : String{
         get{
             return "空闲:\(Apple_System_Info.DeviceInfo.freeDiskSpace_Description())"
         }
     }
-    private class var diskSpace_total_Description : String{
+    fileprivate class var diskSpace_total_Description : String{
         get{
             return "存储空间:\(Apple_System_Info.DeviceInfo.totalDiskSpace_Description())"
         }
     }
-    private class var diskSpace_free_Percent : CGFloat{
+    fileprivate class var diskSpace_free_Percent : CGFloat{
         get{
             return (CGFloat.init(Apple_System_Info.DeviceInfo.freeDiskSpaceInBytes)  / CGFloat.init(Apple_System_Info.DeviceInfo.totalDiskSpaceInBytes))
         }
     }
-    private class var ram_used_Value : CGFloat{
+    fileprivate class var ram_used_Value : CGFloat{
         get{
             return CGFloat.init(Apple_System_Info.DeviceInfo.totalMemory() - Apple_System_Info.DeviceInfo.freeMemory())
         }
     }
-    private class var ram_total_Value : CGFloat{
+    fileprivate class var ram_total_Value : CGFloat{
         get{
             return CGFloat.init(Apple_System_Info.DeviceInfo.totalMemory())
         }
@@ -209,28 +209,28 @@ private class DeviceInfoFormatter {
         }
     }
     //MARK: cpuUsage raw value
-    private class var cpu_usage_Value:CGFloat{
+    fileprivate class var cpu_usage_Value:CGFloat{
         get{
             return CGFloat.init(Apple_System_Info.DeviceInfo.cpuUsage)
         }
     }
     //  MARK:  :
-    private class var device_model_Value : String{
+    fileprivate class var device_model_Value : String{
         get{
             return Apple_System_Info.DeviceInfo.model
         }
     }
-    private class var device_name_Value : String{
+    fileprivate class var device_name_Value : String{
         get{
             return Apple_System_Info.DeviceInfo.name
         }
     }
-    private class var OS_version_Value : String{
+    fileprivate class var OS_version_Value : String{
         get{
             return Apple_System_Info.DeviceInfo.OSVersion
         }
     }
-    private class var isJailbreak_Description : String{
+    fileprivate class var isJailbreak_Description : String{
         get{
             return Apple_System_Info.DeviceInfo.isJailbreak.description
         }

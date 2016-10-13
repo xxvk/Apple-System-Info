@@ -27,7 +27,7 @@ class Network: UITableViewController {
     @IBOutlet var IPAddress: UILabel!
     
     //  MARK: life cycle :
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.WiFiHistory.text = NetworkInfoFormatter.WiFiHistory_MB
@@ -48,7 +48,7 @@ class Network: UITableViewController {
 class DataUsageContainer: UIViewController {
     @IBOutlet var graph: ScrollableGraphView!
     
-    var parent : Network? //parentViewController
+    var parentController: Network? //parentViewController
     
     //store raw for caculate network speed
     lazy var upload_1: Int! = {
@@ -62,9 +62,9 @@ class DataUsageContainer: UIViewController {
     var historySpeed: [Double]! = []{
         didSet{
             if historySpeed.count > numberOfDataItems{
-                let subtractRange =  historySpeed.startIndex.advancedBy(numberOfDataItems) ..< historySpeed.endIndex
+                let subtractRange =  historySpeed.indices.suffix(from: historySpeed.startIndex.advanced(by: numberOfDataItems))
                 
-                historySpeed.removeRange(subtractRange)
+                historySpeed.removeSubrange(subtractRange)
             }
         }
     }
@@ -72,31 +72,31 @@ class DataUsageContainer: UIViewController {
     var labels: [String]! = []{
         didSet{
             if labels.count > numberOfDataItems{
-                let subtractRange = labels.startIndex.advancedBy(numberOfDataItems) ..< labels.endIndex
+                let subtractRange = labels.indices.suffix(from: labels.startIndex.advanced(by: numberOfDataItems))
                 
-                labels.removeRange(subtractRange)
+                labels.removeSubrange(subtractRange)
             }
         }
     }
-    func addSpeedPoint(speed: Int) -> Void {
+    func addSpeedPoint(_ speed: Int) -> Void {
         //historySpeed
         let waldo = Double.init(speed)
         
-        self.historySpeed.insert(waldo, atIndex: 0)
+        self.historySpeed.insert(waldo, at: 0)
         
         //labels
-        let date = NSDate()
-        let foo = NSDateFormatter.init()
-        foo.dateStyle = .ShortStyle
+        let date = Date()
+        let foo = DateFormatter.init()
+        foo.dateStyle = .short
         
-        let baz = foo.stringFromDate(date)
+        let baz = foo.string(from: date)
         
-        self.labels.insert(baz, atIndex: 0)
+        self.labels.insert(baz, at: 0)
     }
     
-    private var timer: NSTimer?
+    fileprivate var timer: Timer?
     /// timer间隔时间,默认1.0秒
-    var timeInterval: NSTimeInterval = 1.0 {
+    var timeInterval: TimeInterval = 1.0 {
         didSet{
             
         }
@@ -104,9 +104,9 @@ class DataUsageContainer: UIViewController {
     
     
     //  MARK: life cycle :
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.parent = (self.parentViewController as! Network)
+        self.parentController = (self.parent as! Network)
         
         self.setup_Graph()
         self.addSpeedPoint(0)
@@ -117,7 +117,7 @@ class DataUsageContainer: UIViewController {
         self.startTimer()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.stopTimer()
     }
@@ -128,33 +128,33 @@ class DataUsageContainer: UIViewController {
         
         graph.lineWidth = 1
         graph.lineColor = UIColor.colorFromHex("#777777")
-        graph.lineStyle = ScrollableGraphViewLineStyle.Smooth
+        graph.lineStyle = ScrollableGraphViewLineStyle.smooth
         
         graph.shouldFill = true
-        graph.fillType = ScrollableGraphViewFillType.Gradient
+        graph.fillType = ScrollableGraphViewFillType.gradient
         graph.fillColor = UIColor.colorFromHex("#555555")
-        graph.fillGradientType = ScrollableGraphViewGradientType.Linear
+        graph.fillGradientType = ScrollableGraphViewGradientType.linear
         graph.fillGradientStartColor = UIColor.colorFromHex("#555555")
         graph.fillGradientEndColor = UIColor.colorFromHex("#444444")
         
         graph.dataPointSpacing = 80
         graph.dataPointSize = 2
-        graph.dataPointFillColor = UIColor.whiteColor()
+        graph.dataPointFillColor = UIColor.white
         
-        graph.referenceLineLabelFont = UIFont.boldSystemFontOfSize(8)
-        graph.referenceLineColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
-        graph.referenceLineLabelColor = UIColor.whiteColor()
+        graph.referenceLineLabelFont = UIFont.boldSystemFont(ofSize: 8)
+        graph.referenceLineColor = UIColor.white.withAlphaComponent(0.2)
+        graph.referenceLineLabelColor = UIColor.white
         graph.numberOfIntermediateReferenceLines = 5
-        graph.dataPointLabelColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
+        graph.dataPointLabelColor = UIColor.white.withAlphaComponent(0.5)
         
         graph.shouldAnimateOnStartup = true
         graph.shouldAdaptRange = true
-        graph.adaptAnimationType = ScrollableGraphViewAnimationType.Elastic
+        graph.adaptAnimationType = ScrollableGraphViewAnimationType.elastic
         graph.animationDuration = 1.5
         graph.rangeMax = 50
         graph.shouldRangeAlwaysStartAtZero = true
         
-        graph.setData(self.historySpeed, withLabels: self.labels)
+        graph.set(data: self.historySpeed, withLabels: self.labels)
         
 //        graph.setNeedsUpdateConstraints()
 //        graph.layoutSubviews()
@@ -166,7 +166,7 @@ class DataUsageContainer: UIViewController {
 extension DataUsageContainer{
     
     //  MARK:  timer:
-    private func startTimer() -> Void
+    fileprivate func startTimer() -> Void
     {
         if timer != nil {
             timer?.invalidate()
@@ -177,15 +177,15 @@ extension DataUsageContainer{
             self.reloadData()
         }
     }
-    private func stopTimer() -> Void
+    fileprivate func stopTimer() -> Void
     {
         timer?.invalidate()
         timer = nil
     }
-    private func reloadData() -> Void
+    fileprivate func reloadData() -> Void
     {
-        self.parent!.WiFiHistory.text = NetworkInfoFormatter.WiFiHistory_MB
-        self.parent!.WWANHistory.text = NetworkInfoFormatter.WWANHistory_MB
+        self.parentController!.WiFiHistory.text = NetworkInfoFormatter.WiFiHistory_MB
+        self.parentController!.WWANHistory.text = NetworkInfoFormatter.WWANHistory_MB
         
         let uploaded_quiz: NetworkInfoFormatter.synchrotron = NetworkInfoFormatter.this_second_uploaded_KBS(self.upload_1)
         
@@ -197,14 +197,14 @@ extension DataUsageContainer{
         self.addSpeedPoint(usage_last_second)
         
         defer{
-            self.parent!.Uploading.text = uploaded_quiz.descript
+            self.parentController!.Uploading.text = uploaded_quiz.descript
             self.upload_1 = uploaded_quiz.recursionValue
             
-            self.parent!.Downloading.text = downloaded_quiz.descript
+            self.parentController!.Downloading.text = downloaded_quiz.descript
             self.download_1 = downloaded_quiz.recursionValue
             //更新图表
             graph.updateConstraintsIfNeeded()
-            graph.setData(self.historySpeed, withLabels: self.labels)
+            graph.set(data: self.historySpeed, withLabels: self.labels)
         }
     }
 }
@@ -226,7 +226,7 @@ private class NetworkInfoFormatter {
             self.recursionValue = recursionValue
         }
     }
-    private class func this_second_uploaded_KBS( x_1: Int ) -> (synchrotron) {
+    fileprivate class func this_second_uploaded_KBS( _ x_1: Int ) -> (synchrotron) {
         let x_2 = Apple_System_Info.NetworkInfo.usage.total_uploaded_raw
         
         let x_delta = x_2 - x_1
@@ -237,7 +237,7 @@ private class NetworkInfoFormatter {
         return synchrotron.init(descript: foo.description + " kb/s", delta: x_delta, recursionValue: x_2)
     }
     
-    private class func this_second_downloaded_KBS( x_1: Int ) -> (synchrotron) {
+    fileprivate class func this_second_downloaded_KBS( _ x_1: Int ) -> (synchrotron) {
         let x_2 = Apple_System_Info.NetworkInfo.usage.total_downloaded_raw
         
         let x_delta = x_2 - x_1
@@ -248,12 +248,12 @@ private class NetworkInfoFormatter {
         return synchrotron.init(descript: foo.description + " kb/s", delta: x_delta, recursionValue: x_2)
     }
     
-    private class var WiFiHistory_MB: String {
+    fileprivate class var WiFiHistory_MB: String {
         get{
             return Apple_System_Info.NetworkInfo.usage.WiFi_MB.description + " MB"
         }
     }
-    private class var WWANHistory_MB: String {
+    fileprivate class var WWANHistory_MB: String {
         get{
             return Apple_System_Info.NetworkInfo.usage.WWAN_MB.description + " MB"
         }

@@ -19,7 +19,7 @@ class AuthorizedSpliter: UISplitViewController {
     
     func splitView_setup() {
         self.presentsWithGesture = false
-        self.preferredDisplayMode = .AllVisible
+        self.preferredDisplayMode = .allVisible
         self.minimumPrimaryColumnWidth = 320
         self.maximumPrimaryColumnWidth = 500
         self.preferredPrimaryColumnWidthFraction = 0.3
@@ -43,7 +43,7 @@ struct AuthorizeElement {
     
     func fire() -> Unmanaged<AnyObject>! {
 //        self._timer.fire()
-        return UIApplication.sharedApplication().performSelector(self.selector)
+        return UIApplication.shared.perform(self.selector)
     }
 }
 

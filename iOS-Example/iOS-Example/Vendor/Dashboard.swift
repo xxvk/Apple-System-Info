@@ -15,7 +15,7 @@ let dangerColor = UIColor(red: 218/255, green: 122/255, blue: 127/255, alpha: 1)
 let enoughColor = UIColor(red:  255/255, green: 153/255, blue: 51/255, alpha: 1) //orange
 
 @IBDesignable
-public class Dashboard: UIView {
+open class Dashboard: UIView {
     
     var fontSize:CGFloat = 16
     var lineSize:CGFloat = 10
@@ -25,12 +25,12 @@ public class Dashboard: UIView {
     
     
     //private
-    private var _title: String = "left"
-    private var x: CGFloat? = 0
-    private var y: CGFloat? = 0
-    private var radius: CGFloat! = 0
-    private var pointer: PointerView?
-    private var explainLabel: UILabel?
+    fileprivate var _title: String = "left"
+    fileprivate var x: CGFloat? = 0
+    fileprivate var y: CGFloat? = 0
+    fileprivate var radius: CGFloat! = 0
+    fileprivate var pointer: PointerView?
+    fileprivate var explainLabel: UILabel?
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
@@ -40,11 +40,11 @@ public class Dashboard: UIView {
         super.init(frame: frame)
         self.setupDefaultValue()
     }
-    public func setupDefaultValue() {
+    open func setupDefaultValue() {
         x = frame.size.width/2
         y = frame.size.height/2
         radius = frame.size.width/2-10
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
     }
     
     convenience public init(frame: CGRect, title: String, left: CGFloat, total: CGFloat, suffix: String, format: String = "%.f", isBorder: Bool = false){
@@ -52,15 +52,15 @@ public class Dashboard: UIView {
         self.title = title ?? ""
         self.isBorder = isBorder
         self.change(left, total: total, suffix: suffix, format: format)
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
     }
     
-    public func change(left: CGFloat, total: CGFloat, suffix: String, format: String = "%.f"){
+    open func change(_ left: CGFloat, total: CGFloat, suffix: String, format: String = "%.f"){
         self.progressMirage = (left / total) * 100
-        self.explainMirage = NSString(format: format, left) as String + "/" + (NSString(format: format, total) as String)  as String + suffix
+        self.explainMirage = NSString(format: format as NSString, left) as String + "/" + (NSString(format: format as NSString, total) as String)  as String + suffix
     }
     
-    public var title:String{
+    open var title:String{
         get {
             return self._title
         }
@@ -96,56 +96,62 @@ public class Dashboard: UIView {
     
     
     
-    override public func drawRect(rect: CGRect) {
+    override open func draw(_ rect: CGRect) {
         //get graphics context
-        let context:CGContextRef = UIGraphicsGetCurrentContext()!;
-        CGContextSetAllowsAntialiasing(context, true)
+        let context:CGContext = UIGraphicsGetCurrentContext()!;
+        context.setAllowsAntialiasing(true)
         
         //
         var start = 149.5, end = 390.5, fragment = 2.4*20, normal = end - fragment, danger = start + fragment
         
-        var startAngle: CGFloat = radians(CGFloat(start));
-        var endAngle: CGFloat = radians(CGFloat(end));
+        let startAngle: CGFloat = radians(CGFloat(start));
+        let endAngle: CGFloat = radians(CGFloat(end));
         
         //border
         if isBorder {
-            var borderColor = UIColor(red: 51/255, green: 102/255, blue: 153/255, alpha: 1).CGColor
-            CGContextSetLineWidth(context, lineSize)
+            let borderColor = UIColor(red: 51/255, green: 102/255, blue: 153/255, alpha: 1).cgColor
+            context.setLineWidth(lineSize)
         
-            CGContextSetStrokeColorWithColor(context, borderColor)
-            CGContextAddArc(context, x!, y!, radius-4, startAngle, endAngle, 0)
-            CGContextDrawPath(context, CGPathDrawingMode.Stroke)
+            context.setStrokeColor(borderColor)
+            context.addArc(center: CGPoint.init(x: x!, y: y!), radius: radius-4, startAngle: startAngle, endAngle: endAngle, clockwise: false)
+//            CGContextAddArc(context, x!, y!, radius-4, startAngle, endAngle, 0)
+            context.drawPath(using: CGPathDrawingMode.stroke)
         
-            CGContextSetStrokeColorWithColor(context, borderColor)
-            CGContextAddArc(context, x!, y!, radius+4, startAngle, endAngle, 0)
-            CGContextDrawPath(context, CGPathDrawingMode.Stroke)
+            context.setStrokeColor(borderColor)
+
+//            CGContextAddArc(context, x!, y!, radius+4, startAngle, endAngle, 0)
+            context.addArc(center: CGPoint.init(x: x!, y: y!), radius: radius+4, startAngle: startAngle, endAngle: endAngle, clockwise: false)
+            context.drawPath(using: CGPathDrawingMode.stroke)
         }
         
         
         //main dashborad
-        CGContextSetLineWidth(context, lineSize)  //set circle line size;
+        context.setLineWidth(lineSize)  //set circle line size;
         
-        CGContextSetStrokeColorWithColor(context, normalColor.CGColor)
-        CGContextAddArc(context,
-                        (x  ??  0),
-                        (y  ??  0),
-                        radius,
-                        startAngle,
-                        endAngle,
-                        0)
-        CGContextDrawPath(context, .Stroke)
+        context.setStrokeColor(normalColor.cgColor)
+//        CGContextAddArc(context,
+//                        (x  ??  0),
+//                        (y  ??  0),
+//                        radius,
+//                        startAngle,
+//                        endAngle,
+//                        0)
+        context.addArc(center: CGPoint.init(x: x ?? 0, y: y ?? 0), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
+        context.drawPath(using: .stroke)
         
         //
         let cicleFragment  = radians(CGFloat(fragment))
         
-        CGContextSetStrokeColorWithColor(context,  dangerColor.CGColor)
-        CGContextAddArc(context, x!, y!, radius, startAngle, startAngle + radians(CGFloat(fragment+1)), 0)
-        CGContextDrawPath(context, .Stroke)
+        context.setStrokeColor(dangerColor.cgColor)
+//        CGContextAddArc(context, x!, y!, radius, startAngle, startAngle + radians(CGFloat(fragment+1)), 0)
+        context.addArc(center: CGPoint.init(x: x!, y: y!), radius: radius, startAngle: startAngle, endAngle: startAngle + radians(CGFloat(fragment+1)), clockwise: false)
+        context.drawPath(using: .stroke)
         
         //
-        CGContextSetStrokeColorWithColor(context,  enoughColor.CGColor)
-        CGContextAddArc(context, x!, y!, radius, endAngle - cicleFragment, endAngle, 0)
-        CGContextDrawPath(context, .Stroke)
+        context.setStrokeColor(enoughColor.cgColor)
+//        CGContextAddArc(context, x!, y!, radius, endAngle - cicleFragment, endAngle, 0)
+        context.addArc(center: CGPoint.init(x: x!, y: y!), radius: radius, startAngle: endAngle - cicleFragment, endAngle: endAngle, clockwise: false)
+        context.drawPath(using: .stroke)
         
         
         var len: CGFloat = 10
@@ -162,9 +168,9 @@ public class Dashboard: UIView {
                 len = 10
                 width = 1
             }
-            var end: CGFloat = CGFloat(end - Double(index) * 2.4)
-            var start: CGFloat = end - CGFloat(width)
-            CGContextSetLineWidth(context, len)
+            let end: CGFloat = CGFloat(end - Double(index) * 2.4)
+            let start: CGFloat = end - CGFloat(width)
+            context.setLineWidth(len)
             if start > CGFloat(normal) {
                 realColor = enoughColor
             }else if end <= CGFloat(danger+1){
@@ -172,22 +178,23 @@ public class Dashboard: UIView {
             }else{
                 realColor = normalColor
             }
-            CGContextSetStrokeColorWithColor(context,  realColor.CGColor)
+            context.setStrokeColor(realColor.cgColor)
             
-            CGContextAddArc(context, x!, y!, radius - len, radians(start), radians(end), 0)
-            CGContextDrawPath(context, .Stroke)
+            context.addArc(center: CGPoint.init(x: x!, y: y!), radius: radius - len, startAngle: radians(start), endAngle: radians(end), clockwise: false)
+//            CGContextAddArc(context, x!, y!, radius - len, radians(start), radians(end), 0)
+            context.drawPath(using: .stroke)
             
             if index % 10 == 0 {
-                var tmp: Double = (Double(index) * 2.4 - 30) * M_PI / 180;
-                var movedFirstX: CGFloat = CGFloat(cos(tmp)) * numberRadius
-                var movedFirstY: CGFloat = CGFloat(sin(tmp)) * numberRadius
-                let number:NSString = String(100 - index)
-                var numberAttributes: [String: AnyObject] = [
+                let tmp: Double = (Double(index) * 2.4 - 30) * M_PI / 180;
+                let movedFirstX: CGFloat = CGFloat(cos(tmp)) * numberRadius
+                let movedFirstY: CGFloat = CGFloat(sin(tmp)) * numberRadius
+                let number:NSString = String(100 - index) as NSString
+                let numberAttributes: [String: AnyObject] = [
                     NSForegroundColorAttributeName : realColor,
-                    NSFontAttributeName : UIFont.systemFontOfSize(12)
+                    NSFontAttributeName : UIFont.systemFont(ofSize: 12)
                 ]
-                var numberFontSize = number.sizeWithAttributes(numberAttributes)
-                number.drawAtPoint(CGPointMake((x! + movedFirstX - numberFontSize.width/2), (y! - movedFirstY - numberFontSize.height/2)), withAttributes: numberAttributes)
+                let numberFontSize = number.size(attributes: numberAttributes)
+                number.draw(at: CGPoint(x: (x! + movedFirstX - numberFontSize.width/2), y: (y! - movedFirstY - numberFontSize.height/2)), withAttributes: numberAttributes)
             }
         }
         
@@ -200,32 +207,32 @@ public class Dashboard: UIView {
     }
     var explainAttributes: [String: AnyObject] = [
         NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0),
-        NSFontAttributeName : UIFont.systemFontOfSize(20)
+        NSFontAttributeName : UIFont.systemFont(ofSize: 20)
     ]
     
     var attributedString: NSAttributedString?
     
     func drawTitle(_ title: String){
-        let font:UIFont! = UIFont.systemFontOfSize(fontSize)
-        var textAttributes: [String: AnyObject] = [
-            NSForegroundColorAttributeName : UIColor.blackColor(),
+        let font:UIFont! = UIFont.systemFont(ofSize: fontSize)
+        let textAttributes: [String: AnyObject] = [
+            NSForegroundColorAttributeName : UIColor.black,
             NSFontAttributeName:font
         ]
         
         attributedString = NSAttributedString(string: title, attributes: textAttributes)
         
-        attributedString!.drawAtPoint(CGPointMake(x!-(attributedString!.size().width/2), y!-60))
+        attributedString!.draw(at: CGPoint(x: x!-(attributedString!.size().width/2), y: y!-60))
         
     }
     
-    private func drawExplainLabel(explain: String) {
-        let explainSize: CGSize = explain.sizeWithAttributes(explainAttributes)
+    fileprivate func drawExplainLabel(_ explain: String) {
+        let explainSize: CGSize = explain.size(attributes: explainAttributes)
         ///if exsit, remove from superView
         if let viewWithTag = self.viewWithTag(98) {
             viewWithTag.removeFromSuperview()
             explainLabel = nil
         }
-        explainLabel = UILabel(frame: CGRectMake(x!-(explainSize.width/2), (y! + 50), frame.size.width, explainSize.height))
+        explainLabel = UILabel(frame: CGRect(x: x!-(explainSize.width/2), y: (y! + 50), width: frame.size.width, height: explainSize.height))
         explainLabel?.tag = 98
         explainLabel?.attributedText = NSAttributedString(string: explain, attributes: explainAttributes)
         explainLabel?.textColor = UIColor(red:  64/255, green: 64/255, blue: 64/255, alpha: 1)
@@ -233,7 +240,7 @@ public class Dashboard: UIView {
     }
     
     //middle pointer
-    private func showPointerView(progress: CGFloat, radius: CGFloat){
+    fileprivate func showPointerView(_ progress: CGFloat, radius: CGFloat){
         var realColor: UIColor
         if(progress <= 20){
             realColor = dangerColor
@@ -247,13 +254,13 @@ public class Dashboard: UIView {
             viewWithTag.removeFromSuperview()
             pointer = nil
         }
-        pointer = PointerView(frame:CGRectMake(0, 0, self.frame.width, self.frame.height), radius: (radius-10), progress: Double((100 - progress)*2.4), color: realColor.CGColor)
-        pointer!.backgroundColor = .clearColor()
+        pointer = PointerView(frame:CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height), radius: (radius-10), progress: Double((100 - progress)*2.4), color: realColor.cgColor)
+        pointer!.backgroundColor = UIColor.clear
         pointer!.tag = 99
         self.addSubview(pointer!)
     }
     
     
     
-    func radians (degrees: CGFloat) -> CGFloat { return degrees * CGFloat(M_PI / 180); }
+    func radians (_ degrees: CGFloat) -> CGFloat { return degrees * CGFloat(M_PI / 180); }
 }

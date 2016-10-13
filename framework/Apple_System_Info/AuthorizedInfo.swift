@@ -10,16 +10,16 @@ import Foundation
 import CoreLocation
 
 //  MARK: - Authorized:权限
-public class AuthorizedInfo{
+open class AuthorizedInfo{
     //  MARK: isLocationAuthorized:地理位置是否可用(e.g bool)
-    public class var Location: Bool {
+    open class var Location: Bool {
         get{
             let  status : CLAuthorizationStatus = CLLocationManager.authorizationStatus();
-            if (status == CLAuthorizationStatus.NotDetermined
+            if (status == CLAuthorizationStatus.notDetermined
                 ||
-                status == CLAuthorizationStatus.Restricted
+                status == CLAuthorizationStatus.restricted
                 ||
-                status == CLAuthorizationStatus.Denied)
+                status == CLAuthorizationStatus.denied)
             {
                 return false;
             }else{

@@ -10,9 +10,9 @@ import UIKit
 
 /// 方向枚举
 public enum Direction {
-    case DirecNone
-    case DirecLeft
-    case DirecRight
+    case direcNone
+    case direcLeft
+    case direcRight
 }
 
 /// 代理协议
@@ -31,71 +31,71 @@ extension CarouselViewDelegate {
 }
 
 //MARK: - 轮播图
-public class CarouselView: UIView
+open class CarouselView: UIView
 {
     /// 代理
-    public weak var delegate: CarouselViewDelegate?
+    open weak var delegate: CarouselViewDelegate?
     
     /// timer间隔时间,默认2.0秒
-    public var timeInterval: NSTimeInterval = 2.0 {
+    open var timeInterval: TimeInterval = 2.0 {
         didSet{
-            imagePath.count > 1 ? self.startTimer() : (scrollView.scrollEnabled = false)
+            imagePath.count > 1 ? self.startTimer() : (scrollView.isScrollEnabled = false)
         }
     }
     
     /// 占位图
-    public var placeHolder = "4.jpg"
+    open var placeHolder = "4.jpg"
     
     /// 要轮播的图片(可以是UIImage对象、url、imageName)
-    public var imagePath: [AnyObject] = [] {
+    open var imagePath: [AnyObject] = [] {
         didSet {
             /// 第一张的占位视图
             currImageV.image = UIImage(named: placeHolder)
-            for (index, obj) in imagePath.enumerate()
+            for (index, obj) in imagePath.enumerated()
             {
                 if let x = obj as? UIImage {
                     self.imageArr.append(x)
-                }else if let x  = obj as? String where x.hasPrefix("http://") {
+                }else if let x  = obj as? String , x.hasPrefix("http://") {
                     self.imageArr.append(UIImage(named: placeHolder) ?? UIImage())
                     self.downImage(index)
                 }else if let x  = obj as? String, let image = UIImage(named: x) {
                     self.imageArr.append(image)
                 }
             }
-            imagePath.count > 1 ? self.startTimer() : (scrollView.scrollEnabled = false)
+            imagePath.count > 1 ? self.startTimer() : (scrollView.isScrollEnabled = false)
             pageControl.numberOfPages = imageArr.count
         }
     }
     
-    public typealias clo = (view: UIImageView!, index:Int) -> Void
+    public typealias clo = (_ view: UIImageView?, _ index:Int) -> Void
     /// 点击当前imageView的closure
-    public var clickImageView: clo?
-    public let pageControl = UIPageControl()
+    open var clickImageView: clo?
+    open let pageControl = UIPageControl()
     //MARK: --------------- private property --------------
     
-    private let scrollView  = UIScrollView()
-    private let currImageV  = UIImageView()
-    private let otherImageV = UIImageView()
+    fileprivate let scrollView  = UIScrollView()
+    fileprivate let currImageV  = UIImageView()
+    fileprivate let otherImageV = UIImageView()
     
     
-    private var timer: NSTimer?
+    fileprivate var timer: Timer?
     /// 滚动(滑动)方向
-    private var direction: Direction = .DirecNone {
+    fileprivate var direction: Direction = .direcNone {
         didSet {
             self.handleCarousel(oldValue)
         }
     }
     /// 图片数组
-    private var imageArr: [UIImage] = []
+    fileprivate var imageArr: [UIImage] = []
     /// 下载的图片内存缓存字典
-    private var imageDic = [NSURL: UIImage]()
+    fileprivate var imageDic = [URL: UIImage]()
     /// 下载操作缓存字典
-    private var operationDic = [NSURL: NSBlockOperation]()
+    fileprivate var operationDic = [URL: BlockOperation]()
     /// 下载操作重复的index字典
-    private var indexDic = [NSURL: Set<Int>]()
+    fileprivate var indexDic = [URL: Set<Int>]()
     
-    private var nextIndex = 0
-    private var currIndex = 0
+    fileprivate var nextIndex = 0
+    fileprivate var currIndex = 0
     
     //MARK: --------------- function --------------
     
@@ -105,22 +105,22 @@ public class CarouselView: UIView
 
         scrollView.delegate = self
         scrollView.bounces = false
-        scrollView.pagingEnabled = true
-        scrollView.backgroundColor = UIColor.whiteColor()
+        scrollView.isPagingEnabled = true
+        scrollView.backgroundColor = UIColor.white
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         
         pageControl.hidesForSinglePage = true
-        pageControl.currentPageIndicatorTintColor = UIColor.redColor()
-        pageControl.pageIndicatorTintColor = UIColor.whiteColor()
+        pageControl.currentPageIndicatorTintColor = UIColor.red
+        pageControl.pageIndicatorTintColor = UIColor.white
         
-        currImageV.contentMode = .ScaleToFill
-        currImageV.userInteractionEnabled = true
+        currImageV.contentMode = .scaleToFill
+        currImageV.isUserInteractionEnabled = true
         currImageV.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(CarouselView.clickImage(_:))))
-        currImageV.backgroundColor = UIColor.whiteColor()
+        currImageV.backgroundColor = UIColor.white
         
-        otherImageV.contentMode = .ScaleToFill
-        otherImageV.backgroundColor = UIColor.whiteColor()
+        otherImageV.contentMode = .scaleToFill
+        otherImageV.backgroundColor = UIColor.white
         
         scrollView.addSubview(currImageV)
         scrollView.addSubview(otherImageV)
@@ -129,27 +129,27 @@ public class CarouselView: UIView
     }
     
     /// 点击当前imageView
-    func clickImage(tap: UITapGestureRecognizer) -> Void {
+    func clickImage(_ tap: UITapGestureRecognizer) -> Void {
         if clickImageView != nil {
-            clickImageView!(view: tap.view as? UIImageView, index: currIndex)
+            clickImageView!(tap.view as? UIImageView, currIndex)
         }else{
             delegate?.carouselViewDidSelect(carouselView: self, index: currIndex)
         }
     }
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         scrollView.frame = bounds
-        scrollView.contentSize = CGSizeMake(3*bounds.width, 0)
-        scrollView.contentOffset = CGPointMake(bounds.width, 0)
-        currImageV.frame = CGRectMake(bounds.width, 0, bounds.width, bounds.height)
+        scrollView.contentSize = CGSize(width: 3*bounds.width, height: 0)
+        scrollView.contentOffset = CGPoint(x: bounds.width, y: 0)
+        currImageV.frame = CGRect(x: bounds.width, y: 0, width: bounds.width, height: bounds.height)
         
-        let size = pageControl.sizeForNumberOfPages(imageArr.count)
-        pageControl.frame = CGRectMake(bounds.width-size.width-10,
-                                       bounds.height-size.height,
-                                       size.width, size.height)
+        let size = pageControl.size(forNumberOfPages: imageArr.count)
+        pageControl.frame = CGRect(x: bounds.width-size.width-10,
+                                       y: bounds.height-size.height,
+                                       width: size.width, height: size.height)
     }
-    public func reloadData() {
+    open func reloadData() {
         self.layoutSubviews()
     }
     required public init?(coder aDecoder: NSCoder) {
@@ -163,40 +163,40 @@ public class CarouselView: UIView
 //MARK: scrollView delegate
 extension CarouselView: UIScrollViewDelegate
 {
-    public func scrollViewDidScroll(scrollView: UIScrollView)
+    public func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
         let offsetX = scrollView.contentOffset.x
         switch offsetX {
         case let x where x > bounds.width: // 向右滑动
-            direction = .DirecRight
+            direction = .direcRight
         case let x where x < bounds.width: // 向左滑动
-            direction = .DirecLeft
+            direction = .direcLeft
         default:
-            direction = .DirecNone // 必须设置,不能忽略
+            direction = .direcNone // 必须设置,不能忽略
         }
         
         // 回到scrollView的contentsize 的中间部分，以便无限滚动
-        if offsetX % bounds.width == 0 && direction != .DirecNone
+        if offsetX.truncatingRemainder(dividingBy: bounds.width) == 0 && direction != .direcNone
         {
             currIndex = nextIndex
             currImageV.image = otherImageV.image
-            scrollView.contentOffset = CGPointMake(bounds.width, 0)
+            scrollView.contentOffset = CGPoint(x: bounds.width, y: 0)
         }
     }
     
-    public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         timer?.invalidate()
         timer = nil
     }
-    public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.startTimer()
     }
     
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         pageControl.currentPage = currIndex
         delegate?.carouselViewDidEndAnimation(carouselView: self, index: currIndex)
     }
-    public func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         pageControl.currentPage = currIndex
         delegate?.carouselViewDidEndAnimation(carouselView: self, index: currIndex)
     }
@@ -206,31 +206,31 @@ extension CarouselView: UIScrollViewDelegate
 extension CarouselView
 {
     /// 处理滚动
-    private func handleCarousel(oldValue: Direction) -> Void {
+    fileprivate func handleCarousel(_ oldValue: Direction) -> Void {
         /// 避免频繁调用
         guard direction != oldValue else { return }
         
         var x: CGFloat = 0, wid: CGFloat = 0, hei: CGFloat = 0
         switch direction
         {
-        case .DirecLeft:
+        case .direcLeft:
             x = 0; wid = bounds.width; hei = bounds.height
             nextIndex = currIndex-1
             if nextIndex < 0 { nextIndex = imageArr.count-1 }
             
-        case .DirecRight:
+        case .direcRight:
             wid = bounds.width; hei = bounds.height
-            x = CGRectGetMaxX(currImageV.frame)
+            x = currImageV.frame.maxX
             nextIndex = (currIndex+1) % imageArr.count
             
         default: break
         }
-        otherImageV.frame = CGRectMake(x, 0, wid, hei)
+        otherImageV.frame = CGRect(x: x, y: 0, width: wid, height: hei)
         otherImageV.image = imageArr[nextIndex]
         delegate?.carouselViewWillChangeDirection(carouselView: self, index: currIndex, originalDir: oldValue, presentDir: direction)
     }
     
-    private func startTimer() -> Void
+    fileprivate func startTimer() -> Void
     {
         if timer != nil {
             timer?.invalidate()
@@ -238,15 +238,15 @@ extension CarouselView
         }
         
         timer = WeakTimer.timerWith(timeInterval, target: self){ [unowned self] _ in
-            self.scrollView.setContentOffset(CGPointMake(2*self.bounds.width, 0), animated: true)
+            self.scrollView.setContentOffset(CGPoint(x: 2*self.bounds.width, y: 0), animated: true)
         }
     }
     
     /// 下载imagePath中的图片
-    private func downImage(index: Int) -> Void
+    fileprivate func downImage(_ index: Int) -> Void
     {
         let path = imagePath[index] as? String
-        guard let url = path.flatMap(NSURL.init) else { return }
+        guard let url = path.flatMap(URL.init) else { return }
         
         var image = imageDic[url]
         guard image == nil else{ /// 内存缓存
@@ -255,7 +255,7 @@ extension CarouselView
             return
         }
         
-        let cacheData = NSURLCache.sharedURLCache().cachedResponseForRequest(NSURLRequest(URL: url))?.data
+        let cacheData = URLCache.shared.cachedResponse(for: URLRequest(url: url))?.data
         image = cacheData.flatMap(UIImage.init)
         
         guard image == nil else { /// 沙盒缓存
@@ -268,22 +268,22 @@ extension CarouselView
         
         if operationDic[url] == nil { /// 队列下载
             debugPrint("队列不存在")
-            let op = NSBlockOperation{ [url, index]
-                if let data = NSData(contentsOfURL: url),
+            let op = BlockOperation{ [url, index] as [Any]
+                if let data = try? Data(contentsOf: url),
                     let image = UIImage(data: data)?.decode()/// 解码
                 {
                     GCD.async_main{
                         if self.imageArr.count > index {
                             self.imageArr[index] = image
                             self.indexDic[url]?.forEach{ self.imageArr[$0] = image }
-                            self.indexDic.removeValueForKey(url)
+                            self.indexDic.removeValue(forKey: url)
                         }
-                        self.operationDic.removeValueForKey(url)
+                        self.operationDic.removeValue(forKey: url)
                         self.imageDic[url] = image
                     }
                 }
             }
-            NSOperationQueue().addOperation(op)
+            OperationQueue().addOperation(op)
             operationDic[url] = op
         }else{
             debugPrint("队列存在")
@@ -297,17 +297,17 @@ extension CarouselView
 public struct WeakTimer
 {
     /// 不对target强引用,不阻塞主线程,不需要在deinit中释放
-    public static func timerWith(timeInterval: NSTimeInterval, target: AnyObject, selector: Selector, userInfo: AnyObject? = nil, repeats: Bool = true) -> NSTimer
+    public static func timerWith(_ timeInterval: TimeInterval, target: AnyObject, selector: Selector, userInfo: AnyObject? = nil, repeats: Bool = true) -> Timer
     {
         let proxy = WeakProxy()
         proxy.target = target
         proxy.selector = selector
         
-        let timer = NSTimer(timeInterval: timeInterval, target: proxy, selector: #selector(WeakProxy.fire), userInfo: userInfo, repeats: repeats)
+        let timer = Timer(timeInterval: timeInterval, target: proxy, selector: #selector(WeakProxy.fire), userInfo: userInfo, repeats: repeats)
         
         GCD.async_globle {
-            NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
-            NSRunLoop.currentRunLoop().run()
+            RunLoop.current.add(timer, forMode: RunLoopMode.defaultRunLoopMode)
+            RunLoop.current.run()
         }
         
         proxy.timer = timer
@@ -315,17 +315,17 @@ public struct WeakTimer
     }
     
     /// 不对target强引用,不阻塞主线程,不需要在deinit中释放
-    public static func timerWith(timeInterval: NSTimeInterval, target: AnyObject, repeats: Bool = true, _ closure: NSTimer? -> Void) -> NSTimer
+    public static func timerWith(_ timeInterval: TimeInterval, target: AnyObject, repeats: Bool = true, _ closure: @escaping (Timer?) -> Void) -> Timer
     {
         let proxy = WeakProxy()
         proxy.target = target
         proxy.closour = closure
         
-        let timer = NSTimer(timeInterval: timeInterval, target: proxy, selector: #selector(WeakProxy.executeClosure), userInfo: nil, repeats: repeats)
+        let timer = Timer(timeInterval: timeInterval, target: proxy, selector: #selector(WeakProxy.executeClosure), userInfo: nil, repeats: repeats)
         
         GCD.async_globle {
-            NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
-            NSRunLoop.currentRunLoop().run()
+            RunLoop.current.add(timer, forMode: RunLoopMode.defaultRunLoopMode)
+            RunLoop.current.run()
         }
         
         proxy.timer = timer
@@ -336,16 +336,16 @@ public struct WeakTimer
 //MARK: - WeakProxy
 private final class WeakProxy: NSObject
 {
-    private weak var target: AnyObject? = nil
-    private var selector: Selector?
-    private var closour: (NSTimer?) -> Void = {_ in}
-    private weak var timer: NSTimer?
+    fileprivate weak var target: AnyObject? = nil
+    fileprivate var selector: Selector?
+    fileprivate var closour: (Timer?) -> Void = {_ in}
+    fileprivate weak var timer: Timer?
     
     @objc func fire() -> Void {
         if target != nil && selector != nil
-            && target!.respondsToSelector(selector!)
+            && target!.responds(to: selector!)
         {
-            GCD.async_main{ self.target?.performSelector(self.selector!) }
+            GCD.async_main{ self.target?.perform(self.selector!) }
         }else {
             self.invalidateTimer()
         }
@@ -360,7 +360,7 @@ private final class WeakProxy: NSObject
         GCD.async_main{ self.closour(weakSelf.timer) }
     }
     
-    private func invalidateTimer() -> Void {
+    fileprivate func invalidateTimer() -> Void {
         if timer != nil { timer!.invalidate() }
         timer = nil
     }
@@ -372,20 +372,22 @@ private final class WeakProxy: NSObject
 
 public struct GCD
 {
-    public static func async_main(clo: dispatch_block_t){
-        dispatch_async(dispatch_get_main_queue(), clo)
+    public static func async_main(_ clo: @escaping ()->()){
+        DispatchQueue.main.async(execute: clo)
     }
-    public static func async_globle(clo: dispatch_block_t){
-        dispatch_async(dispatch_get_global_queue(0, 0), clo)
+    public static func async_globle(_ clo: @escaping ()->()){
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async(execute: clo)
+//        DispatchQueue.global(priority: 0).async(execute: clo)
+
     }
 }
 
 extension UIImageView {
     /// 后台解码图片
-    func decodeInBackground(img: UIImage?) -> Void {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+    func decodeInBackground(_ img: UIImage?) -> Void {
+        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background).async {
             let image = img?.decode()
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.image = image
             })
         }
@@ -399,36 +401,39 @@ extension UIImage {
         do {
             guard self.images == nil else { return self }
             
-            let imageRef = self.CGImage
-            let alpha = CGImageGetAlphaInfo(imageRef)
+            let imageRef = self.cgImage
+            let alpha = imageRef?.alphaInfo
             
-            let anyAlpha = (alpha == .First || alpha == .Last ||
-                alpha == .PremultipliedFirst ||
-                alpha == .PremultipliedLast)
+            let anyAlpha = (alpha == .first || alpha == .last ||
+                alpha == .premultipliedFirst ||
+                alpha == .premultipliedLast)
             if anyAlpha { return self }
             
-            let width = CGImageGetWidth(imageRef)
-            let height = CGImageGetHeight(imageRef)
+            let width = imageRef?.width
+            let height = imageRef?.height
             
-            let imageColorSpaceModel = CGColorSpaceGetModel(CGImageGetColorSpace(imageRef))
-            var colorspaceRef = CGImageGetColorSpace(imageRef)
+            let imageColorSpaceModel = imageRef?.colorSpace?.model
+            var colorspaceRef = imageRef?.colorSpace
             
-            let unsupportedColorSpace = (imageColorSpaceModel.rawValue == 0 || imageColorSpaceModel.rawValue == -1 || imageColorSpaceModel == .CMYK || imageColorSpaceModel == .Indexed)
+            let unsupportedColorSpace = (imageColorSpaceModel?.rawValue == 0 || imageColorSpaceModel?.rawValue == -1 || imageColorSpaceModel == .cmyk || imageColorSpaceModel == .indexed)
             
             if unsupportedColorSpace { colorspaceRef = CGColorSpaceCreateDeviceRGB() }
             
-            let void = UnsafeMutablePointer<Void>(nil)
-            let context = CGBitmapContextCreate(void, width, height,
-                                                CGImageGetBitsPerComponent(imageRef),
-                                                0,
-                                                colorspaceRef,
-                                                CGBitmapInfo.ByteOrderDefault.rawValue
-                                                    | CGImageAlphaInfo.PremultipliedFirst.rawValue)
-    
-            CGContextDrawImage(context, CGRectMake(0, 0, CGFloat(width), CGFloat(height)), imageRef)
-            let imageRefWithAlpha = CGBitmapContextCreateImage(context)!
+//            let void = UnsafeMutableRawPointer()
+            let context = CGContext.init(data: nil, width: width!, height: height!, bitsPerComponent: (imageRef?.bitsPerComponent)!, bytesPerRow: 0, space: colorspaceRef!, bitmapInfo: CGBitmapInfo().rawValue
+                | CGImageAlphaInfo.premultipliedFirst.rawValue)
             
-            let imageWithAlpha = UIImage(CGImage: imageRefWithAlpha, scale: self.scale, orientation: self.imageOrientation)
+//            let context = CGContext(data: void, width: width, height: height,
+//                                                bitsPerComponent: imageRef.bitsPerComponent,
+//                                                bytesPerRow: 0,
+//                                                space: colorspaceRef,
+//                                                bitmapInfo: CGBitmapInfo().rawValue
+//                                                    | CGImageAlphaInfo.premultipliedFirst.rawValue)
+    
+            context?.draw(imageRef!, in: CGRect(x: 0, y: 0, width: CGFloat(width!), height: CGFloat(height!)))
+            let imageRefWithAlpha = context?.makeImage()!
+            
+            let imageWithAlpha = UIImage(cgImage: imageRefWithAlpha!, scale: self.scale, orientation: self.imageOrientation)
             
             return imageWithAlpha
         }

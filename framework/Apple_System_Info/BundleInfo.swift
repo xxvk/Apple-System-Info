@@ -9,13 +9,13 @@
 import Foundation
 
 //  MARK: - BundleInfo（Elementary）:包基础信息
-public class BundleInfo{
+open class BundleInfo{
     //  MARK: infoDictionary:私有字典属性
-    private class var infoDictionary: [String : AnyObject]! {
+    fileprivate class var infoDictionary: [String : AnyObject]! {
         get{
-            let foo = NSBundle.mainBundle().infoDictionary!
+            let foo = Bundle.main.infoDictionary!
             
-            return foo
+            return foo as [String : AnyObject]!
         }
     }
     //  MARK: version:这个会设置应用程序版本号，每次部署应用程序的一个新版本时，将会增加这个编号，在app store用的
@@ -539,15 +539,15 @@ extension BundleInfo  {
     }
     enum PresentationMode : Int {
         
-        case Normal = 0//Normal mode. 标准的系统UI元素可见。 默认值。
+        case normal = 0//Normal mode. 标准的系统UI元素可见。 默认值。
         
-        case Content_suppressed = 1//Content suppressed mode. In this mode, system UI elements in the content area of the screen are hidden. UI elements may show themselves automatically in response to mouse movements or other user activity. For example, the Dock may show itself when the mouse moves into the Dock’s auto-show region.
+        case content_suppressed = 1//Content suppressed mode. In this mode, system UI elements in the content area of the screen are hidden. UI elements may show themselves automatically in response to mouse movements or other user activity. For example, the Dock may show itself when the mouse moves into the Dock’s auto-show region.
         
-        case Content_hidden = 2//Content hidden mode. In this mode, system UI elements in the content area of the screen are hidden and do not automatically show themselves in response to mouse movements or user activity.
+        case content_hidden = 2//Content hidden mode. In this mode, system UI elements in the content area of the screen are hidden and do not automatically show themselves in response to mouse movements or user activity.
         
-        case All_hidden = 3//All hidden mode. In this mode, all UI elements are hidden, including the menu bar. Elements do not automatically show themselves in response to mouse movements or user activity.
+        case all_hidden = 3//All hidden mode. In this mode, all UI elements are hidden, including the menu bar. Elements do not automatically show themselves in response to mouse movements or user activity.
         
-        case All_suppressed = 4//All suppressed mode. In this mode, all UI elements are hidden, including the menu bar. UI elements may show themselves automatically in response to mouse movements or other user activity. This option is available only in OS X v10.3 and later.
+        case all_suppressed = 4//All suppressed mode. In this mode, all UI elements are hidden, including the menu bar. UI elements may show themselves automatically in response to mouse movements or other user activity. This option is available only in OS X v10.3 and later.
     }
     
     //  MARK: UIPresentationMode : 应用程序启动时设置系统UI元素的可见性。确定了初始的应用程序的用户界面模式。你可以使用这个应用程序，可能需要采取部分包含UI元素，如在Dock和菜单栏的屏幕。大多数模式的影响只出现在内容区域中的画面，就是在屏幕的面积，不包括菜单栏的UI元素。但是，您可以要求所有的UI元素被隐藏
@@ -774,8 +774,8 @@ extension BundleInfo  {
             return foo
         }
     }
-    public class APFiles: AnyObject {
-        private var rawDictionary: [String : AnyObject]! {
+    open class APFiles: AnyObject {
+        fileprivate var rawDictionary: [String : AnyObject]! {
             get{
                 let foo = BundleInfo.infoDictionary["APFiles"] as! [String : AnyObject]!
                 
@@ -1151,7 +1151,7 @@ extension BundleInfo  {
             //Plug-in types
             let foo = self.infoDictionary["CFPlugInTypes"] as! [String : AnyObject]!
             
-            return foo
+            return foo!
         }
     }
     
